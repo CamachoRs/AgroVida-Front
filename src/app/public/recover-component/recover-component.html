@@ -1,0 +1,21 @@
+<div class="row py-4 justify-content-center align-items-center">
+    <div class="col col-12 col-lg-4">
+        <img src="assets/img/AgroVida-register.jpeg" class="img-fluid" alt="Logotipo de bienvenida a AgroVida">
+        <h2 class="text-center fw-bold mt-4 mb-0">¿Perdiste el acceso a tu cuenta? No te preocupes</h2>
+        <p class="text-center mb-4">
+            Te enviaremos instrucciones para que puedas restablecer tu contraseña de forma segura
+        </p>
+    </div>
+    <div class="col col-12 col-lg-4">
+        <form #formulario="ngForm" class="px-3" (ngSubmit)="recover(formulario)">
+            <h2 class="text-center fw-bold">Recuperar contraseña</h2>
+            <div class="mb-3">
+                <label for="formGroupExampleInput1" class="form-label">Correo electrónico:</label>
+                <input type="email" class="form-control" id="formGroupExampleInput1" placeholder="Ingresa tu correo"
+                    name="email" [(ngModel)]="user.email">
+            </div>
+            <input type="submit" value="Enviar instrucciones" class="btn bg-color-1 w-100 rounded-4 fw-bold">
+            <p class="mt-3 mb-1 text-center"><a routerLink="/" class="color-1">Volver al inicio de sesión</a></p>
+        </form>
+    </div>
+</div>

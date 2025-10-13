@@ -1,0 +1,56 @@
+<div class="row py-4 justify-content-center align-items-center">
+    <div class="col col-12 col-lg-4">
+        <img src="assets/img/AgroVida-register.jpeg" class="img-fluid" alt="Logotipo de bienvenida a AgroVida">
+        <h2 class="text-center color-1 fw-bold my-3">
+            Regístrate y empieza a gestionar tu finca con tecnología sencilla y útil
+        </h2>
+    </div>
+    <div class="col col-12 col-lg-4">
+        <form #formulario="ngForm" class="px-2" (ngSubmit)="register(formulario)">
+            <div class="mb-3">
+                <label for="formGroupExampleInput1" class="form-label">Nombre completo:</label>
+                <input type="text" class="form-control" id="formGroupExampleInput1" placeholder="Ingresa tu nombre"
+                    name="nameUser" [(ngModel)]="newUser.nameUser" />
+            </div>
+            <div class="mb-3">
+                <label for="formGroupExampleInput2" class="form-label">Correo electrónico:</label>
+                <input type="email" class="form-control" id="formGroupExampleInput2" placeholder="Ingresa tu correo"
+                    name="email" [(ngModel)]="newUser.email">
+            </div>
+            <div class="mb-3">
+                <label for="formGroupExampleInput3" class="form-label">Contraseña:</label>
+                <input type="password" class="form-control" id="formGroupExampleInput3" placeholder="Crea tu contraseña"
+                    name="password" [(ngModel)]="newUser.password">
+            </div>
+            <div class="mb-3">
+                <label for="formGroupExampleInput4" class="form-label">Número celular:</label>
+                <input type="tel" class="form-control" id="formGroupExampleInput4"
+                    placeholder="Ingresa tu número de celular" name="phoneNumber" [(ngModel)]="newUser.phoneNumber">
+            </div>
+            <div class="mb-3">
+                <label for="formGroupExampleInput5" class="form-label">Municipio:</label>
+                <select class="form-select color-1" aria-label="Default select example" id="formGroupExampleInput5"
+                    name="municipality" [(ngModel)]="newEstablishment.municipality">
+                    <option value="" selected disabled>Selecciona el municio de tu finca</option>
+                    @for (municipality of municipalities; track municipality) {
+                    <option value="{{municipality}}">{{municipality}}</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="formGroupExampleInput6" class="form-label">Nombre de la vereda:</label>
+                <input type="text" class="form-control" id="formGroupExampleInput6"
+                    placeholder="Ingresa el nombre de la vereda" name="sidewalk"
+                    [(ngModel)]="newEstablishment.sidewalk">
+            </div>
+            <div class="mb-3">
+                <label for="formGroupExampleInput7" class="form-label">Nombre de la finca:</label>
+                <input type="text" class="form-control" id="formGroupExampleInput7"
+                    placeholder="Ingresa el nombre de tu finca" name="nameEstate"
+                    [(ngModel)]="newEstablishment.nameEstate">
+            </div>
+            <input type="submit" value="Registrar" class="btn bg-color-1 w-100 rounded-4 fw-bold">
+            <p class="mt-3">¿Ya tienes una cuenta? <a routerLink="/" class="color-1">Inicia sesión aquí</a></p>
+        </form>
+    </div>
+</div>
