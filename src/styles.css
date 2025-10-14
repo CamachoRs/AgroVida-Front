@@ -2,16 +2,32 @@
 :root {
     --color-1: #6E8566;
     --color-2: #D1EDC9;
+    --color-3: #1B5E20;
+    --color-4: #2E7D32;
+    --color-5: #F2F5F2;
 }
 
 .color-1 {
     color: var(--color-1);
 }
 
+.color-3 {
+    color: var(--color-3);
+}
+
 .bg-color-1 {
     background: var(--color-2);
 }
 
+.bg-color-5 {
+    background: var(--color-5);
+}
+
 a {
     text-decoration: none;
+}
+
+.nav-link-active {
+    color: var(--color-4);
+    text-decoration: underline;
 }

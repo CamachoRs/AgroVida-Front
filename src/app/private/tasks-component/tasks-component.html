@@ -1,0 +1,32 @@
+<app-nav-component></app-nav-component>
+<div class="px-sm-5">
+    <h2 class="fw-bold mt-4">Tareas</h2>
+    <p class="mb-4">Estas tareas ayudan a que todo funcione bien. ¡Gracias por tu esfuerzo!</p>
+    <nav class="d-none d-md-flex">
+        <div class="nav nav-underline" id="nav-tab" role="tablist">
+            <button class="nav-link active color-1" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list"
+                type="button" role="tab" aria-controls="nav-list" aria-selected="true">
+                Mis tareas
+            </button>
+            <button class="nav-link color-1" id="nav-complete-tab" data-bs-toggle="tab" data-bs-target="#nav-complete"
+                type="button" role="tab" aria-controls="nav-complete" aria-selected="false">
+                Completar tarea
+            </button>
+            <button class="nav-link color-1" id="nav-manage-tab" data-bs-toggle="tab" data-bs-target="#nav-manage"
+                type="button" role="tab" aria-controls="nav-manage" aria-selected="false">
+                Gestionar tareas
+            </button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-tasks-tab"
+            tabindex="0">
+            <app-item-component (cambiarPestana)="activarPestana($event)"></app-item-component>
+            <button class="btn bg-color-5 rounded-5 w-100">Exportar registro de tareas en la finca</button>
+        </div>
+        <div class="tab-pane fade" id="nav-complete" role="tabpanel" aria-labelledby="nav-complete-tab" tabindex="0">...
+        </div>
+        <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">...
+        </div>
+    </div>
+</div>
