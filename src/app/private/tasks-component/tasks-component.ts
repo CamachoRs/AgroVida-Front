@@ -9,7 +9,9 @@ import { ItemComponent } from './item-component/item-component';
   styleUrl: './tasks-component.css'
 })
 export class TasksComponent {
-  activarPestana(tabId: string) {
+  activeLink = "tasks";
+
+  activateTab(tabId: string) {
     const tabButton = document.getElementById(tabId);
     if (tabButton) {
       tabButton.click();

@@ -1,0 +1,29 @@
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Nombre del producto</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Cantidad disponible + unidad medida</th>
+                <th scope="col">Fecha de ingreso</th>
+                <th scope="col">Fecha de vencimiento</th>
+                <th scope="col">Proveedor</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="fw-normal">Antibiótico X</th>
+                <td>Medicamentos</td>
+                <td>50 + ml</td>
+                <td>15/01/2023</td>
+                <td>15/01/2024</td>
+                <td>Proveedor A</td>
+                <td>
+                    <button class="btn bg-color-1 rounded-5 fw-bold" (click)="requestChange('nav-manage-tab')">
+                        Detalle
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

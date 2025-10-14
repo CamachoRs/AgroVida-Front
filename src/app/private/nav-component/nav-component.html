@@ -9,13 +9,27 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-link nav-link-active" routerLink="/tasks">Tareas</a>
-            <a class="nav-link" href="#">Animales</a>
-            <a class="nav-link" href="#">Novedades</a>
-            <a class="nav-link" href="#">Inventario</a>
-            <a class="nav-link" href="#">Empleados</a>
-            <a class="nav-link" href="#">Perfil</a>
-            <a class="nav-link" href="#">Cerrar sesión</a>
+            <a class="nav-link nav-link-active" [class.nav-link-active]="activeLink==='tasks'" routerLink="/tasks">
+                Tareas
+            </a>
+            <a class="nav-link" [class.nav-link-active]="activeLink==='Animales'" href="#">
+                Animales
+            </a>
+            <a class="nav-link" [class.nav-link-active]="activeLink==='Novedades'" href="#">
+                Novedades
+            </a>
+            <a class="nav-link" [class.nav-link-active]="activeLink==='inventory'" routerLink="/inventory">
+                Inventario
+            </a>
+            <a class="nav-link" [class.nav-link-active]="activeLink==='Empleados'" href="#">
+                Empleados
+            </a>
+            <a class="nav-link" [class.nav-link-active]="activeLink==='Perfil'" href="#">
+                Perfil
+            </a>
+            <a class="nav-link" [class.nav-link-active]="activeLink==='Cerrar sesión'" href="#">Cerrar
+                sesión
+            </a>
         </div>
     </div>
 </nav>
