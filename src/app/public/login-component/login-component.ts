@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../../models/user.modelo';
+import { User } from '../../models/user.model';
 import { PublicService } from '../../services/public.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -11,7 +11,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
   templateUrl: './login-component.html',
   styleUrl: './login-component.css'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   newUser: User = {
     email: "",
     password: ""
@@ -51,9 +51,9 @@ export class LoginComponent {
       this.publicService.login(this.newUser, this.id).subscribe({
         next: (responseCorrect) => {
           form.reset();
-          sessionStorage.setItem("token", responseCorrect.token);
-          sessionStorage.setItem("refresh_token", responseCorrect.refresh_token);
-          this.router.navigate(["/dashboard"]);
+          sessionStorage.setItem("access_token", responseCorrect.access_token);
+          sessionStorage.setItem("expires_in", responseCorrect.expires_in);
+          this.router.navigate(["/tasks"]);
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {

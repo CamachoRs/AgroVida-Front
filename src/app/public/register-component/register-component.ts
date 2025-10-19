@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../../models/user.modelo';
+import { User } from '../../models/user.model';
 import { ToastrService } from 'ngx-toastr';
 import { PublicService } from '../../services/public.service';
-import { Establishment } from '../../models/establishment.modelo';
+import { Establishment } from '../../models/establishment.model';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -116,7 +116,7 @@ export class RegisterComponent {
         this.toastr.error(message);
       });
     } else {
-      this.publicService.guardarUsuario(this.newUser, this.newEstablishment).subscribe({
+      this.publicService.register(this.newUser, this.newEstablishment).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
           form.resetForm();

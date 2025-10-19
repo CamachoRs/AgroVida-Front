@@ -17,40 +17,48 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab"
             tabindex="0">
-            <app-item-component (changeTab)="activateTab($event)" />
+            <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100" (click)="activateTab('nav-manage-tab')">
+                <i class="fa-solid fa-plus"></i>
+                Agregar un producto
+            </button>
+            <app-item-component (changeTab)="activateTabItem($event)" />
         </div>
         <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">
             <form #formulario="ngForm" class="row">
-                <div class="mb-3">
-                    <label for="formGroupExampleInput1" class="form-label">Nombre:</label>
-                    <input type="text" class="form-control" id="formGroupExampleInput1"
-                        placeholder="Ingresa el nombre del producto que desea consultar" name="nameProduct" />
-                </div>
                 <div class="col col-12 col-md-6">
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput1" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput1"
+                            placeholder="Ingresa el nombre del producto que desea consultar" name="nameItem"
+                            [(ngModel)]="newItem.nameItem" />
+                    </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Cantidad:</label>
                         <input type="number" class="form-control" id="formGroupExampleInput2"
-                            placeholder="Ingrese la cantidad total" name="amount" />
-                    </div>
-                    <div class="mb-3">
-                        <label for="formGroupExampleInput3" class="form-label">Fecha de ingreso:</label>
-                        <input type="date" class="form-control" id="formGroupExampleInput3" name="entryDate"
-                            [(ngModel)]="currentDate" [value]="currentDate" readonly />
+                            placeholder="Ingrese la cantidad total" name="amount" [(ngModel)]="newItem.quantity" />
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput4" class="form-label">Categoría:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput4" name="category">
-                            <option value="" selected disabled>Selecciona la categoría</option>
-                            <option value="">Medicamento</option>
+                            id="formGroupExampleInput4" name="category" [(ngModel)]="newItem.category.id">
+                            <option value="0" selected disabled>Selecciona la categoría</option>
+                            @for(item of categories; track item.id){
+                            <option value="{{item.id}}">{{item.nameCategory}}</option>
+                            }
                         </select>
                     </div>
                 </div>
                 <div class="col col-12 col-md-6">
                     <div class="mb-3">
+                        <label for="formGroupExampleInput6" class="form-label">Fecha de vencimiento:</label>
+                        <input type="date" class="form-control" id="formGroupExampleInput6"
+                            placeholder="Ingrese o seleccione la fecha de vencimiento" name="expirationDate"
+                            [(ngModel)]="newItem.expiryDate" />
+                    </div>
+                    <div class="mb-3">
                         <label for="formGroupExampleInput5" class="form-label">Unidad de medida:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput5" name="unitMeasurement">
+                            id="formGroupExampleInput5" name="unitMeasurement" [(ngModel)]="newItem.unitMeasurement">
                             <option value="" selected disabled>Selecciona la unidad de medida</option>
                             @for (item of unitMeasurement; track item) {
                             <option value="{{item}}">{{item}}</option>
@@ -58,21 +66,21 @@
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="formGroupExampleInput6" class="form-label">Fecha de vencimiento:</label>
-                        <input type="date" class="form-control" id="formGroupExampleInput6"
-                            placeholder="Ingrese o seleccione la fecha de vencimiento" name="expirationDate" />
-                    </div>
-                    <div class="mb-3">
                         <label for="formGroupExampleInput7" class="form-label">Proveedor:</label>
                         <input type="text" class="form-control" id="formGroupExampleInput7"
-                            placeholder="Ingrese el nombre del proveedor" name="supplier" />
+                            placeholder="Ingrese el nombre del proveedor" name="supplier"
+                            [(ngModel)]="newItem.supplierName" />
                     </div>
                 </div>
                 <div class="d-flex flex-column gap-2 justify-content-center align-items-center">
-                    <input type="submit" class="w-50 btn bg-color-1 rounded-5 fw-bold" value="Nuevo producto">
-                    <input type="submit" class="w-50 btn bg-color-5 rounded-5 fw-bold" value="Guardar cambios">
-                    <input type="submit" class="w-50 btn rounded-5 fw-bold" value="Eliminar producto">
+                    <input type="submit" class="w-50 btn bg-color-1 rounded-5 fw-bold" value="Nuevo producto"
+                        (click)="postInventory(formulario)">
+                    <input type="submit" class="w-50 btn bg-color-5 rounded-5 fw-bold" value="Guardar cambios"
+                        (click)="setInventory(formulario)">
+                    <input type="submit" class="w-50 btn rounded-5 fw-bold" value="Eliminar producto"
+                        (click)="deleteInventory(formulario)">
                     <button class="btn rounded-5 d-sm-none" (click)="activateTab('nav-list-tab')">
+                        <i class="fa-solid fa-arrow-left"></i>
                         Volver al listado de productos
                     </button>
                 </div>

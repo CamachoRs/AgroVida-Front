@@ -11,19 +11,24 @@
             </tr>
         </thead>
         <tbody>
+            @for(item of inventoryItems; track item.id){
             <tr>
-                <th class="fw-normal">Antibiótico X</th>
-                <td>Medicamentos</td>
-                <td>50 + ml</td>
-                <td>15/01/2023</td>
-                <td>15/01/2024</td>
-                <td>Proveedor A</td>
+                <th class="fw-normal">{{item.nameItem}}</th>
+                <td>{{item.category.nameCategory}}</td>
+                <td>{{item.quantity}} + {{item.unitMeasurement}}</td>
+                <td>{{item.entryDate | date:'dd/MM/yyyy'}}</td>
+                <td>{{item.expiryDate | date:'dd/MM/yyyy'}}</td>
+                <td>{{item.supplierName}}</td>
                 <td>
-                    <button class="btn bg-color-1 rounded-5 fw-bold" (click)="requestChange('nav-manage-tab')">
+                    <button class="btn bg-color-1 rounded-5 fw-bold" (click)="requestChange('nav-manage-tab', item)">
                         Detalle
                     </button>
                 </td>
             </tr>
+            }
         </tbody>
     </table>
+    <p class="text-center color-1">
+        Has llegado al final del inventario
+    </p>
 </div>

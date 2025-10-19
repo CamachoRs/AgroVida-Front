@@ -1,17 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../models/user.modelo';
-import { Establishment } from '../models/establishment.modelo';
+import { User } from '../models/user.model';
+import { Establishment } from '../models/establishment.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PublicService {
-  private urlBase = "http://192.168.101.6:8000/api/public";
+  private urlBase = "http://192.168.101.6:8000/api";
 
   constructor(private http: HttpClient) { };
 
-  guardarUsuario(user: User, establishment: Establishment) {
+  register(user: User, establishment: Establishment) {
     const data = {
       user,
       establishment
@@ -23,8 +23,6 @@ export class PublicService {
   login(user: User, id: string | null) {
     const url = id ? `${this.urlBase}/login/${id}` : `${this.urlBase}/login`;
     const data = { user };
-    console.log(url);
-
     return this.http.post<any>(url, data);
   };
 
