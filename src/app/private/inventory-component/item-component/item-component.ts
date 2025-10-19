@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { InventoryService } from '../../../services/inventory.service';
 import { ToastrService } from 'ngx-toastr';
-import { Inventory } from '../../../models/inventory.model';
+import { Inventory } from '../../../models/Inventory.model';
 import { CommonModule } from '@angular/common';
 import { Category } from '../../../models/Category.model';
 

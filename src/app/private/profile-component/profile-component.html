@@ -1,0 +1,64 @@
+<app-nav-component [activeLink]="activeLink" />
+<div class="px-sm-5">
+    <h2 class="fw-bold mt-4">Perfil</h2>
+    <p class="mb-4">
+        Tu cuenta es la principal. Gracias a ella puedes cuidar cada detalle de la finca y acompañar el trabajo de tu
+        equipo.
+    </p>
+    <form #formulario="ngForm" class="px-2 row justify-content-evenly" (ngSubmit)="setUser(formulario)">
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput1" class="form-label">Nombre completo:</label>
+            <input type="text" class="form-control" id="formGroupExampleInput1" placeholder="Ingresa tu nombre"
+                name="nameUser" [(ngModel)]="editUser.nameUser" />
+        </div>
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput4" class="form-label">Número celular:</label>
+            <input type="tel" class="form-control" id="formGroupExampleInput4"
+                placeholder="Ingresa tu número de celular" name="phoneNumber" [(ngModel)]="editUser.phoneNumber">
+        </div>
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput2" class="form-label">Correo electrónico:</label>
+            <input type="email" class="form-control" id="formGroupExampleInput2" placeholder="Ingresa tu correo"
+                name="email" [(ngModel)]="editUser.email">
+        </div>
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput3" class="form-label">Contraseña:</label>
+            <input type="password" class="form-control" id="formGroupExampleInput3"
+                placeholder="Actualiza tu contraseña" name="password" [(ngModel)]="editUser.password">
+        </div>
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput8" class="form-label">Rol:</label>
+            <input type="text" class="form-control" id="formGroupExampleInput8" name="role" [(ngModel)]="editUser.role"
+                readonly>
+        </div>
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput9" class="form-label">Fecha de ingreso:</label>
+            <input type="date" class="form-control" id="formGroupExampleInput9" name="created_at"
+                [(ngModel)]="editUser.created_at" readonly>
+        </div>
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput5" class="form-label">Municipio:</label>
+            <select class="form-select color-1" aria-label="Default select example" id="formGroupExampleInput5"
+                name="municipality" [(ngModel)]="editEstablishment.municipality">
+                <option value="" selected disabled>Selecciona el municio de tu finca</option>
+                @for (municipality of municipalities; track municipality) {
+                <option value="{{municipality}}">{{municipality}}</option>
+                }
+            </select>
+        </div>
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput6" class="form-label">Nombre de la vereda:</label>
+            <input type="text" class="form-control" id="formGroupExampleInput6"
+                placeholder="Ingresa el nombre de la vereda" name="sidewalk" [(ngModel)]="editEstablishment.sidewalk">
+        </div>
+        <div class="mb-3 col-12 col-md-5">
+            <label for="formGroupExampleInput7" class="form-label">Nombre de la finca:</label>
+            <input type="text" class="form-control" id="formGroupExampleInput7"
+                placeholder="Ingresa el nombre de tu finca" name="nameEstate"
+                [(ngModel)]="editEstablishment.nameEstate">
+        </div>
+        <div class="col-12 col-md-5 d-flex justify-content-end align-items-center mb-2">
+            <input type="submit" value="Editar" class="btn bg-color-1 rounded-4 fw-bold w-100">
+        </div>
+    </form>
+</div>

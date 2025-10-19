@@ -1,26 +1,29 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { NavComponent } from "../nav-component/nav-component";
 import { FormsModule, NgForm } from '@angular/forms';
 import { User } from '../../models/User.model';
-import { ToastrService } from 'ngx-toastr';
-import { PublicService } from '../../services/public.service';
 import { Establishment } from '../../models/Establishment.model';
-import { RouterModule } from '@angular/router';
+import { ProfileService } from '../../services/profile.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-register',
-  imports: [FormsModule, RouterModule],
-  templateUrl: './register-component.html',
-  styleUrl: './register-component.css'
+  selector: 'app-profile-component',
+  imports: [NavComponent, FormsModule],
+  templateUrl: './profile-component.html',
+  styleUrl: './profile-component.css'
 })
-export class RegisterComponent {
-  newUser: User = {
+export class ProfileComponent implements OnInit {
+  activeLink = "profile";
+  editUser: User = {
     nameUser: "",
     email: "",
     password: "",
-    phoneNumber: 0
+    phoneNumber: 0,
+    role: "",
+    created_at: ""
   };
 
-  newEstablishment: Establishment = {
+  editEstablishment: Establishment = {
     municipality: "",
     sidewalk: "",
     nameEstate: ""
@@ -66,7 +69,26 @@ export class RegisterComponent {
     "La Palma"
   ];
 
-  constructor(private publicService: PublicService, private toastr: ToastrService) { };
+  constructor(private profileService: ProfileService, private toastr: ToastrService, private changeDetector: ChangeDetectorRef) { };
+
+  ngOnInit(): void {
+    this.getUser();
+  };
+
+  getUser() {
+    const email = sessionStorage.getItem("email");
+    this.profileService.getUser(email).subscribe({
+      next: (responseCorrect) => {
+        this.editUser = responseCorrect.user;
+        this.editUser.created_at = responseCorrect.user.created_at.split("T")[0];
+        this.editEstablishment = responseCorrect.establishment;
+        this.changeDetector.detectChanges();
+      },
+      error: (responseError) => {
+        this.toastr.error(responseError.message);
+      }
+    });
+  };
 
   validations(): string[] {
     let errorMessages: string[] = [];
@@ -75,52 +97,53 @@ export class RegisterComponent {
     const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
     const regexPhoneNumber = /^(3[0-9]{9})$/;
 
-    if (this.newUser.nameUser?.trim() && this.newUser.email?.trim() && this.newUser.password?.trim() && this.newUser.phoneNumber) {
-      if (!regexName.test(this.newUser.nameUser.trim())) {
+    if (this.editUser.nameUser?.trim() && this.editUser.email?.trim() && this.editUser.phoneNumber) {
+      if (!regexName.test(this.editUser.nameUser.trim())) {
         errorMessages.push("El nombre de usuario debe contener solo letras y espacios, y tener al menos 3 caracteres.");
       };
 
-      if (!regexEmail.test(this.newUser.email.trim()) || this.newUser.email.trim().length < 10 || this.newUser.email.trim().length > 100) {
+      if (!regexEmail.test(this.editUser.email.trim()) || this.editUser.email.trim().length < 10 || this.editUser.email.trim().length > 100) {
         errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
       };
 
-      if (!regexPassword.test(this.newUser.password.trim())) {
-        errorMessages.push("La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un símbolo especial.");
-      };
-
-      if (!regexPhoneNumber.test(this.newUser.phoneNumber.toString().trim())) {
+      if (!regexPhoneNumber.test(this.editUser.phoneNumber.toString().trim())) {
         errorMessages.push("El número de teléfono debe ser válido.");
       };
 
-      if (this.newEstablishment.municipality == "") {
+      if (this.editEstablishment.municipality == "") {
         errorMessages.push("Por favor, selecciona un municipio.");
       };
 
-      if (!regexName.test(this.newEstablishment.sidewalk.trim())) {
+      if (!regexName.test(this.editEstablishment.sidewalk.trim())) {
         errorMessages.push("El nombre de la vereda debe contener solo letras y espacios, y tener al menos 3 caracteres.");
       };
 
-      if (!regexName.test(this.newEstablishment.nameEstate.trim())) {
+      if (!regexName.test(this.editEstablishment.nameEstate.trim())) {
         errorMessages.push("El nombre de la finca debe contener solo letras y espacios, y al menos 3 caracteres.");
       };
     } else {
       errorMessages.push("Por favor, completa todos los campos.");
     }
+
+    if (this.editUser.password?.trim() && !regexPassword.test(this.editUser.password.trim())) {
+      errorMessages.push("La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un símbolo especial.");
+    };
     return errorMessages;
   };
 
-  register(form: NgForm) {
+  setUser(form: NgForm) {
     const errorMessages = this.validations();
     if (errorMessages.length > 0) {
       errorMessages.forEach((message) => {
         this.toastr.error(message);
       });
     } else {
-      this.publicService.register(this.newUser, this.newEstablishment).subscribe({
+      this.profileService.setUSer(this.editUser, this.editEstablishment).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
-          form.resetForm();
-          this.newEstablishment.municipality = "";
+          if (responseCorrect.email) {
+            sessionStorage.setItem("email", responseCorrect.email);
+          };
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {
@@ -131,7 +154,7 @@ export class RegisterComponent {
               });
             };
           } else {
-            this.toastr.error("Hubo un error al crear el usuario.");
+            this.toastr.error("Hubo un error al actualizar la información");
           };
         }
       });

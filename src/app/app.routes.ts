@@ -4,14 +4,16 @@ import { RegisterComponent } from './public/register-component/register-componen
 import { RecoverComponent } from './public/recover-component/recover-component';
 import { TasksComponent } from './private/tasks-component/tasks-component';
 import { InventoryComponent } from './private/inventory-component/inventory-component';
+import { authGuardGuardIn, authGuardGuardOut } from './services/auth.guard-guard';
+import { ProfileComponent } from './private/profile-component/profile-component';
 
 export const routes: Routes = [
-    { path: "", component: LoginComponent },
-    { path: "login/:id", component: LoginComponent },
-    { path: "register", component: RegisterComponent },
-    { path: "recover", component: RecoverComponent },
+    { path: "", component: LoginComponent, canActivate: [authGuardGuardIn] },
+    { path: "login/:id", component: LoginComponent, canActivate: [authGuardGuardIn] },
+    { path: "register", component: RegisterComponent, canActivate: [authGuardGuardIn] },
+    { path: "recover", component: RecoverComponent, canActivate: [authGuardGuardIn] },
 
-    // Validar esto para que puedan acceder solo los autenticados
-    { path: "tasks", component: TasksComponent },
-    { path: "inventory", component: InventoryComponent },
+    { path: "tasks", component: TasksComponent, canActivate: [authGuardGuardOut] },
+    { path: "inventory", component: InventoryComponent, canActivate: [authGuardGuardOut] },
+    { path: "profile", component: ProfileComponent, canActivate: [authGuardGuardOut] },
 ];

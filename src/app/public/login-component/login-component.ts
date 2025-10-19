@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../../models/user.model';
+import { User } from '../../models/User.model';
 import { PublicService } from '../../services/public.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -53,6 +53,8 @@ export class LoginComponent implements OnInit {
           form.reset();
           sessionStorage.setItem("access_token", responseCorrect.access_token);
           sessionStorage.setItem("expires_in", responseCorrect.expires_in);
+          sessionStorage.setItem("email", responseCorrect.email);
+          sessionStorage.setItem("role", responseCorrect.role);
           this.router.navigate(["/tasks"]);
         },
         error: (responseError) => {

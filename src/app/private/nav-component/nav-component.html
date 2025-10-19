@@ -24,11 +24,11 @@
             <a class="nav-link" [class.nav-link-active]="activeLink==='Empleados'" href="#">
                 Empleados
             </a>
-            <a class="nav-link" [class.nav-link-active]="activeLink==='Perfil'" href="#">
+            <a class="nav-link" [class.nav-link-active]="activeLink==='profile'" routerLink="/profile">
                 Perfil
             </a>
-            <a class="nav-link" [class.nav-link-active]="activeLink==='Cerrar sesión'" href="#">Cerrar
-                sesión
+            <a class="nav-link" role="button" (click)="logout()">
+                Cerrar sesión
             </a>
         </div>
     </div>

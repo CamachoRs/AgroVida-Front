@@ -4,7 +4,7 @@ import { ItemComponent } from './item-component/item-component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InventoryService } from '../../services/inventory.service';
-import { Inventory } from '../../models/inventory.model';
+import { Inventory } from '../../models/Inventory.model';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
 import { Category } from '../../models/Category.model';

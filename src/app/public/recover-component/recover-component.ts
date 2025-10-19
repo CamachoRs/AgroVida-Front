@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { User } from '../../models/user.model';
+import { User } from '../../models/User.model';
 import { PublicService } from '../../services/public.service';
 import { ToastrService } from 'ngx-toastr';
 
