@@ -133,13 +133,45 @@ export class InventoryComponent implements OnInit {
   };
 
   setInventory(form: NgForm) {
-    const errorMessages = this.validations();
-    if (errorMessages.length > 0) {
-      errorMessages.forEach((message) => {
-        this.toastr.error(message);
-      });
+    if (this.newItem.id) {
+
+      const errorMessages = this.validations();
+      if (errorMessages.length > 0) {
+        errorMessages.forEach((message) => {
+          this.toastr.error(message);
+        });
+      } else {
+        this.inventoryService.setInventory(this.newItem, this.newItem.id).subscribe({
+          next: (responseCorrect) => {
+            this.toastr.success(responseCorrect.message);
+            form.resetForm();
+            this.activateTab('nav-list-tab');
+            this.itemComponent.listInventory();
+          },
+          error: (responseError) => {
+            if (responseError && responseError.error && responseError.error.errors) {
+              const fieldsErrors = responseError.error.errors;
+              for (const field in fieldsErrors) {
+                fieldsErrors[field].forEach((message: string) => {
+                  this.toastr.error(message);
+                });
+              };
+            } else if (responseError && responseError.error && responseError.error.message) {
+              this.toastr.error(responseError.error.message);
+            } else {
+              this.toastr.error("Hubo un error registrar el producto.");
+            };
+          }
+        });
+      }
     } else {
-      this.inventoryService.setInventory(this.newItem, this.newItem.id).subscribe({
+      this.toastr.error("¡Casi! Primero selecciona el producto que deseas eliminar de la tabla.")
+    };
+  };
+
+  deleteInventory(form: NgForm) {
+    if (this.newItem.id) {
+      this.inventoryService.deleteInventory(this.newItem.id).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
           form.resetForm();
@@ -147,35 +179,12 @@ export class InventoryComponent implements OnInit {
           this.itemComponent.listInventory();
         },
         error: (responseError) => {
-          if (responseError && responseError.error && responseError.error.errors) {
-            const fieldsErrors = responseError.error.errors;
-            for (const field in fieldsErrors) {
-              fieldsErrors[field].forEach((message: string) => {
-                this.toastr.error(message);
-              });
-            };
-          } else if (responseError && responseError.error && responseError.error.message) {
-            this.toastr.error(responseError.error.message);
-          } else {
-            this.toastr.error("Hubo un error registrar el producto.");
-          };
+          this.toastr.error(responseError.message)
         }
       });
-    }
-  };
-
-  deleteInventory(form: NgForm) {
-    this.inventoryService.deleteInventory(this.newItem.id).subscribe({
-      next: (responseCorrect) => {
-        this.toastr.success(responseCorrect.message);
-        form.resetForm();
-        this.activateTab('nav-list-tab');
-        this.itemComponent.listInventory();
-      },
-      error: (responseError) => {
-        this.toastr.error(responseError.message)
-      }
-    });
+    } else {
+      this.toastr.error("¡Casi! Primero selecciona el producto que deseas eliminar de la tabla.")
+    };
   };
 
   getCategory() {

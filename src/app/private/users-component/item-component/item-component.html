@@ -1,0 +1,36 @@
+<div class="table-responsive">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th scope="col">Nombre completo</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Rol</th>
+                <th scope="col">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for(item of users; track item.id){
+            <tr class="justify-content-center">
+                <th class="fw-normal">{{item.nameUser}}</th>
+                <td>{{item.email}}</td>
+                <td>{{item.role}}</td>
+                <td>
+                    @if(item.status){
+                    Activado
+                    }@else{
+                    Desactivado
+                    }
+                </td>
+                <td>
+                    <button class="btn bg-color-1 rounded-5 fw-bold" (click)="requestChange('nav-manage-tab', item)">
+                        Detalle
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+    <p class="text-center color-1">
+        Has llegado al final de la lista de empleados
+    </p>
+</div>

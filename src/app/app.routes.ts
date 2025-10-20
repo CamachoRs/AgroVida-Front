@@ -6,6 +6,7 @@ import { TasksComponent } from './private/tasks-component/tasks-component';
 import { InventoryComponent } from './private/inventory-component/inventory-component';
 import { authGuardGuardIn, authGuardGuardOut } from './services/auth.guard-guard';
 import { ProfileComponent } from './private/profile-component/profile-component';
+import { UsersComponent } from './private/users-component/users-component';
 
 export const routes: Routes = [
     { path: "", component: LoginComponent, canActivate: [authGuardGuardIn] },
@@ -16,4 +17,5 @@ export const routes: Routes = [
     { path: "tasks", component: TasksComponent, canActivate: [authGuardGuardOut] },
     { path: "inventory", component: InventoryComponent, canActivate: [authGuardGuardOut] },
     { path: "profile", component: ProfileComponent, canActivate: [authGuardGuardOut] },
+    { path: "users", component: UsersComponent, canActivate: [authGuardGuardOut] },
 ];
