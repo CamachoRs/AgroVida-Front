@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { User } from '../../models/User.model';
 import { PublicService } from '../../services/public.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -12,20 +11,14 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './recover-component.css'
 })
 export class RecoverComponent {
-  user: User = {
-    email: ""
-  };
+  recoverEmail: string = "";
 
   constructor(private publicService: PublicService, private toastr: ToastrService) { };
 
   validations(): string[] {
     let errorMessages: string[] = [];
-    if (this.user.email?.trim()) {
-      if (this.user.email.trim().length < 10) {
-        errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
-      };
-    } else {
-      errorMessages.push("Por favor, completa todos los campos.");
+    if (!this.recoverEmail.trim() || this.recoverEmail.trim().length < 10 || this.recoverEmail.trim().length > 100) {
+      errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
     };
     return errorMessages;
   };
@@ -37,10 +30,11 @@ export class RecoverComponent {
         this.toastr.error(message);
       });
     } else {
-      this.publicService.recover(this.user).subscribe({
+      this.publicService.recover(this.recoverEmail).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
           form.resetForm();
+          this.recoverEmail = "";
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {

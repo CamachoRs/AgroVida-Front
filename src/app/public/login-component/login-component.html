@@ -6,12 +6,12 @@
         <div class="mb-3">
             <label for="formGroupExampleInput1" class="form-label">Correo electrónico:</label>
             <input type="email" class="form-control" id="formGroupExampleInput1" placeholder="Ingresa tu correo"
-                name="email" [(ngModel)]="newUser.email">
+                name="email" [(ngModel)]="loginEmail">
         </div>
         <div class="mb-3">
             <label for="formGroupExampleInput2" class="form-label">Contraseña:</label>
             <input type="password" class="form-control" id="formGroupExampleInput2" placeholder="Crea tu contraseña"
-                name="password" [(ngModel)]="newUser.password">
+                name="password" [(ngModel)]="loginPassword">
         </div>
         <input type="submit" value="Iniciar sesión" class="btn bg-color-1 w-100 rounded-4 fw-bold">
         <p class="mt-3 mb-1"><a routerLink="/recover" class="color-1">¿Olvidaste tu contraseña?</a></p>

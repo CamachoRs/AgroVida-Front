@@ -17,11 +17,50 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab"
             tabindex="0">
-            <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100" (click)="activateTab('nav-manage-tab')">
+            <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100"
+                (click)="activateTabItem('nav-manage-tab', null)">
                 <i class="fa-solid fa-plus"></i>
                 Agregar un empleado
             </button>
-            <app-item-component (changeTab)="activateTabItem($event)" />
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre completo</th>
+                            <th scope="col">Correo</th>
+                            <th scope="col">Rol</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Fecha de creación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(item of listUsers; track item.id){
+                        <tr class="justify-content-center">
+                            <th class="fw-normal">{{item.nameUser}}</th>
+                            <td>{{item.email}}</td>
+                            <td>{{item.role}}</td>
+                            <td>
+                                @if(item.status){
+                                Activado
+                                }@else{
+                                Desactivado
+                                }
+                            </td>
+                            <td>{{item.created_at | date:'dd-MM-yyyy'}}</td>
+                            <td>
+                                <button class="btn bg-color-1 rounded-5 fw-bold"
+                                    (click)="activateTabItem('nav-manage-tab', item)">
+                                    Detalle
+                                </button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <p class="text-center color-1">
+                    Has llegado al final de la lista de empleados
+                </p>
+            </div>
         </div>
         <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">
             <form #formulario="ngForm" class="row">
@@ -29,17 +68,17 @@
                     <div class="mb-3">
                         <label for="formGroupExampleInput1" class="form-label">Nombre completo:</label>
                         <input type="text" class="form-control" id="formGroupExampleInput1"
-                            placeholder="Ingresa tu nombre" name="nameUser" [(ngModel)]="newUser.nameUser" />
+                            placeholder="Ingresa tu nombre" name="nameUser" [(ngModel)]="employNameUser" />
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Correo electrónico:</label>
                         <input type="email" class="form-control" id="formGroupExampleInput2"
-                            placeholder="Ingresa tu correo" name="email" [(ngModel)]="newUser.email">
+                            placeholder="Ingresa tu correo" name="email" [(ngModel)]="employEmail">
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput3" class="form-label">Contraseña:</label>
                         <input type="password" class="form-control" id="formGroupExampleInput3"
-                            placeholder="Crea tu contraseña" name="password" [(ngModel)]="newUser.password">
+                            placeholder="Crea tu contraseña" name="password" [(ngModel)]="employPassword">
                     </div>
                 </div>
                 <div class="col col-12 col-md-6">
@@ -47,21 +86,21 @@
                         <label for="formGroupExampleInput4" class="form-label">Número celular:</label>
                         <input type="tel" class="form-control" id="formGroupExampleInput4"
                             placeholder="Ingresa tu número de celular" name="phoneNumber"
-                            [(ngModel)]="newUser.phoneNumber">
+                            [(ngModel)]="employPhoneNumber">
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput5" class="form-label">Estado:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput5" name="status" [(ngModel)]="newUser.status">
+                            id="formGroupExampleInput5" name="status" [(ngModel)]="employStatus">
                             <option value="" selected disabled>Selecciona el estado del usuario</option>
-                            <option [value]="true">Activado</option>
-                            <option [value]="false">Desactivado</option>
+                            <option value="true">Activado</option>
+                            <option value="false">Desactivado</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput6" class="form-label">Rol:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput6" name="role" [(ngModel)]="newUser.role">
+                            id="formGroupExampleInput6" name="role" [(ngModel)]="employRole">
                             <option value="" selected disabled>Selecciona el rol del usuario</option>
                             <option value="encargado">Encargado</option>
                             <option value="empleado">Empleado</option>
@@ -75,7 +114,7 @@
                         (click)="setEmploy(formulario)">
                     <input type="submit" class="w-50 btn rounded-5 fw-bold" value="Eliminar producto"
                         (click)="deleteEmploy(formulario)">
-                    <button class="btn rounded-5 d-sm-none" (click)="activateTab('nav-list-tab')">
+                    <button class="btn rounded-5 d-sm-none" (click)="activateTabItem('nav-list-tab', null)">
                         <i class="fa-solid fa-arrow-left"></i>
                         Volver al listado de productos
                     </button>

@@ -1,23 +1,35 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../models/User.model';
-import { Establishment } from '../models/Establishment.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
-  private urlBase = "http://192.168.101.6:8000/api";
+  private urlBase = "http://192.168.101.9:8000/api";
 
   constructor(private http: HttpClient) { };
 
-  getUser(email: string | null) {
-    const data = { email }
+  getUser(profileEmail: string | null) {
+    const data = {
+      user: { email: profileEmail?.trim() }
+    }
     return this.http.post<any>(`${this.urlBase}/profile`, data);
   };
 
-  setUSer(user: User, establishment: Establishment) {
-    const data = { user, establishment };
+  setUSer(profileNameUser: string, profileEmail: string, profilePassword: string, profilePhoneNumber: string, profileNameEstate: string, profileSideWalk: string, profileMunicipality: string) {
+    const data = {
+      user: {
+        nameUser: profileNameUser.trim(),
+        email: profileEmail.trim(),
+        password: profilePassword.trim() ? profilePassword.trim() : undefined,
+        phoneNumber: profilePhoneNumber.trim()
+      },
+      establishment: {
+        nameEstate: profileNameEstate.trim(),
+        sidewalk: profileSideWalk.trim(),
+        municipality: profileMunicipality.trim()
+      }
+    };
     return this.http.put<any>(`${this.urlBase}/profile`, data);
   };
 }

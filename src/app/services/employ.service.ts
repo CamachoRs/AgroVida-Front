@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from '../models/User.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmployService {
-  private urlBase = "http://192.168.101.6:8000/api";
+  private urlBase = "http://192.168.101.9:8000/api";
 
   constructor(private http: HttpClient) { };
 
@@ -14,17 +13,35 @@ export class EmployService {
     return this.http.get<any>(`${this.urlBase}/employees`);
   };
 
-  postEmploy(user: User) {
-    const data = { user };
+  postEmploy(employNameUser: string, employEmail: string, employPassword: string, employPhoneNumber: string, employStatus: boolean, employRole: string) {
+    const data = {
+      user: {
+        nameUser: employNameUser.trim(),
+        email: employEmail.trim(),
+        password: employPassword.trim(),
+        phoneNumber: employPhoneNumber.trim(),
+        status: employStatus,
+        role: employRole.trim()
+      }
+    };
     return this.http.post<any>(`${this.urlBase}/employ`, data);
   };
 
-  setEmploy(user: User, id: number = 0) {
-    const data = { user }
+  setEmploy(employNameUser: string, employEmail: string, employPassword: string, employPhoneNumber: string, employStatus: boolean, employRole: string, id: number) {
+    const data = {
+      user: {
+        nameUser: employNameUser.trim(),
+        email: employEmail.trim(),
+        password: employPassword.trim() ? employPassword.trim() : undefined,
+        phoneNumber: employPhoneNumber.trim(),
+        status: employStatus,
+        role: employRole.trim()
+      }
+    }
     return this.http.put<any>(`${this.urlBase}/employ/${id}`, data);
   };
 
-  deleteEmploy(id: number = 0) {
+  deleteEmploy(id: number) {
     return this.http.delete<any>(`${this.urlBase}/employ/${id}`);
   };
 }

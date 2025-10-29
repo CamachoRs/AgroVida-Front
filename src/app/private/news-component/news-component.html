@@ -1,0 +1,102 @@
+<app-nav-component [activeLink]="activeLink" />
+<div class="px-sm-5">
+    <h2 class="fw-bold my-4">Novedades</h2>
+    <div class="card my-3 border-0 shadow-sm">
+        <div class="row g-0">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title">Novedades sobre el cuidado de terneros</h5>
+                    <p class="card-text">
+                        Descubre las últimas novedades sobre el cuidado de terneros, incluyendo consejos sobre
+                        alimentación, salud y manejo. Mantente al día con las mejores prácticas para asegurar el
+                        bienestar de tus animales.
+                    </p>
+                    <div class="d-none d-md-flex gap-2">
+                        <button class="btn bg-color-1 rounded-5" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+                            Ver más
+                        </button>
+                        <button class="btn bg-color-5 rounded-5" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                            Editar
+                        </button>
+                        <button class="btn rounded-5">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 text-center">
+                <img src="assets/img/vacaPrueba.png" class="img-fluid py-2 rounded-5" alt="..."
+                    style="max-height: 200px; object-fit: cover;">
+            </div>
+        </div>
+        <div class="d-flex d-md-none gap-2 card-body">
+            <button class="btn bg-color-1 rounded-5" data-bs-toggle="modal" data-bs-target="#exampleModal1">
+                Ver más
+            </button>
+            <button class="btn bg-color-5 rounded-5" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                Editar
+            </button>
+            <button class="btn rounded-5">Eliminar</button>
+        </div>
+    </div>
+    <!-- Modal - ver noticia -->
+    <div class="modal fade" id="exampleModal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="exampleModal1Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 fw-bold" id="exampleModal1Label">
+                        Novedades sobre el cuidado de terneros
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Descubre las últimas novedades sobre el cuidado de terneros, incluyendo consejos sobre alimentación,
+                    salud y manejo. Mantente al día con las mejores prácticas para asegurar el bienestar de tus
+                    animales.
+                    <p class="color-1 my-2 fs-6 fw-light">
+                        De: AGROVIDA | Publicado el 26-10-2025
+                    </p>
+                    <img src="assets/img/vacaPrueba.png" class="img-fluid rounded-5" alt="...">
+                </div>
+                <div class="border-top px-4 pt-2">
+                    <p class="fs-5 fw-bold">Animales relacionados</p>
+                    <div class="d-flex gap-2">
+                        <p class="btn rounded-5 bg-color-5">Vaca</p>
+                        <p class="btn rounded-5 bg-color-5">Gallina</p>
+                        <p class="btn rounded-5 bg-color-5">Cerdo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal - editar/agregar noticia -->
+    <div class="modal fade" id="exampleModal2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="exampleModal2Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5 fw-bold" id="exampleModal2Label">
+                        Editar
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Descubre las últimas novedades sobre el cuidado de terneros, incluyendo consejos sobre alimentación,
+                    salud y manejo. Mantente al día con las mejores prácticas para asegurar el bienestar de tus
+                    animales.
+                    <p class="color-1 my-2 fs-6 fw-light">
+                        De: AGROVIDA | Publicado el 26-10-2025
+                    </p>
+                    <img src="assets/img/vacaPrueba.png" class="img-fluid rounded-5" alt="...">
+                </div>
+                <div class="border-top px-4 pt-2">
+                    <p class="fs-5 fw-bold">Animales relacionados</p>
+                    <div class="d-flex gap-2">
+                        <p class="btn rounded-5 bg-color-5">Vaca</p>
+                        <p class="btn rounded-5 bg-color-5">Gallina</p>
+                        <p class="btn rounded-5 bg-color-5">Cerdo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

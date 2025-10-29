@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../../models/User.model';
 import { PublicService } from '../../services/public.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -12,12 +11,9 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
   styleUrl: './login-component.css'
 })
 export class LoginComponent implements OnInit {
-  newUser: User = {
-    email: "",
-    password: ""
-  };
-
   id: string | null = null;
+  loginEmail: string = "";
+  loginPassword: string = "";
 
   constructor(private publicService: PublicService, private toastr: ToastrService, private router: Router, private route: ActivatedRoute) { };
 
@@ -29,13 +25,14 @@ export class LoginComponent implements OnInit {
 
   validations(): string[] {
     let errorMessages: string[] = [];
+    const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (this.newUser.email?.trim() && this.newUser.password?.trim()) {
-      if (this.newUser.password.trim().length < 8) {
-        errorMessages.push("La contraseña debe tener al menos 8 caracteres.");
-      };
-    } else {
-      errorMessages.push("Por favor, completa todos los campos.");
+    if (!this.loginEmail.trim() || !regexEmail.test(this.loginEmail.trim()) || this.loginEmail.trim().length < 10 || this.loginEmail.trim().length > 100) {
+      errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
+    };
+
+    if (!this.loginPassword.trim() || this.loginPassword.trim().length < 8) {
+      errorMessages.push("La contraseña debe tener al menos 8 caracteres.");
     };
 
     return errorMessages;
@@ -48,9 +45,11 @@ export class LoginComponent implements OnInit {
         this.toastr.error(message);
       });
     } else {
-      this.publicService.login(this.newUser, this.id).subscribe({
+      this.publicService.login(this.loginEmail, this.loginPassword, this.id).subscribe({
         next: (responseCorrect) => {
           form.reset();
+          this.loginEmail = "";
+          this.loginPassword = "";
           sessionStorage.setItem("access_token", responseCorrect.access_token);
           sessionStorage.setItem("expires_in", responseCorrect.expires_in);
           sessionStorage.setItem("email", responseCorrect.email);

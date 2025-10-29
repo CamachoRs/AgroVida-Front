@@ -7,6 +7,7 @@ import { InventoryComponent } from './private/inventory-component/inventory-comp
 import { authGuardGuardIn, authGuardGuardOut } from './services/auth.guard-guard';
 import { ProfileComponent } from './private/profile-component/profile-component';
 import { UsersComponent } from './private/users-component/users-component';
+import { NewsComponent } from './private/news-component/news-component';
 
 export const routes: Routes = [
     { path: "", component: LoginComponent, canActivate: [authGuardGuardIn] },
@@ -14,8 +15,9 @@ export const routes: Routes = [
     { path: "register", component: RegisterComponent, canActivate: [authGuardGuardIn] },
     { path: "recover", component: RecoverComponent, canActivate: [authGuardGuardIn] },
 
-    { path: "tasks", component: TasksComponent, canActivate: [authGuardGuardOut] },
-    { path: "inventory", component: InventoryComponent, canActivate: [authGuardGuardOut] },
     { path: "profile", component: ProfileComponent, canActivate: [authGuardGuardOut] },
     { path: "users", component: UsersComponent, canActivate: [authGuardGuardOut] },
+    { path: "inventory", component: InventoryComponent, canActivate: [authGuardGuardOut] },
+    { path: "news", component: NewsComponent, canActivate: [authGuardGuardOut] },
+    { path: "tasks", component: TasksComponent, canActivate: [authGuardGuardOut] },
 ];

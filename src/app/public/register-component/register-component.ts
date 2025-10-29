@@ -1,9 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../../models/User.model';
 import { ToastrService } from 'ngx-toastr';
 import { PublicService } from '../../services/public.service';
-import { Establishment } from '../../models/Establishment.model';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -13,19 +11,13 @@ import { RouterModule } from '@angular/router';
   styleUrl: './register-component.css'
 })
 export class RegisterComponent {
-  newUser: User = {
-    nameUser: "",
-    email: "",
-    password: "",
-    phoneNumber: 0
-  };
-
-  newEstablishment: Establishment = {
-    municipality: "",
-    sidewalk: "",
-    nameEstate: ""
-  };
-
+  newNameUser: string = "";
+  newEmail: string = "";
+  newPassword: string = "";
+  newPhoneNumber: string = "";
+  newMunicipality: string = "";
+  newSidewalk: string = "";
+  newNameEstate: string = "";
   municipalities: string[] = [
     "Neiva",
     "Aipe",
@@ -75,37 +67,33 @@ export class RegisterComponent {
     const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
     const regexPhoneNumber = /^(3[0-9]{9})$/;
 
-    if (this.newUser.nameUser?.trim() && this.newUser.email?.trim() && this.newUser.password?.trim() && this.newUser.phoneNumber) {
-      if (!regexName.test(this.newUser.nameUser.trim())) {
-        errorMessages.push("El nombre de usuario debe contener solo letras y espacios, y tener al menos 3 caracteres.");
-      };
+    if (!this.newNameUser.trim() || !regexName.test(this.newNameUser.trim())) {
+      errorMessages.push("El nombre de usuario debe contener solo letras y espacios, y tener al menos 3 caracteres.");
+    };
 
-      if (!regexEmail.test(this.newUser.email.trim()) || this.newUser.email.trim().length < 10 || this.newUser.email.trim().length > 100) {
-        errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
-      };
+    if (!this.newEmail.trim() || !regexEmail.test(this.newEmail.trim()) || this.newEmail.trim().length < 10 || this.newEmail.trim().length > 100) {
+      errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
+    };
 
-      if (!regexPassword.test(this.newUser.password.trim())) {
-        errorMessages.push("La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un símbolo especial.");
-      };
+    if (!this.newPassword.trim() || !regexPassword.test(this.newPassword.trim())) {
+      errorMessages.push("La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un símbolo especial.");
+    };
 
-      if (!regexPhoneNumber.test(this.newUser.phoneNumber.toString().trim())) {
-        errorMessages.push("El número de teléfono debe ser válido.");
-      };
+    if (!this.newPhoneNumber.trim() || !regexPhoneNumber.test(this.newPhoneNumber.trim())) {
+      errorMessages.push("El número de teléfono debe ser válido.");
+    };
 
-      if (this.newEstablishment.municipality == "") {
-        errorMessages.push("Por favor, selecciona un municipio.");
-      };
+    if (!this.newMunicipality.trim()) {
+      errorMessages.push("Por favor, selecciona un municipio.");
+    };
 
-      if (!regexName.test(this.newEstablishment.sidewalk.trim())) {
-        errorMessages.push("El nombre de la vereda debe contener solo letras y espacios, y tener al menos 3 caracteres.");
-      };
+    if (!this.newSidewalk.trim() || !regexName.test(this.newSidewalk.trim())) {
+      errorMessages.push("El nombre de la vereda debe contener solo letras y espacios, y tener al menos 3 caracteres.");
+    };
 
-      if (!regexName.test(this.newEstablishment.nameEstate.trim())) {
-        errorMessages.push("El nombre de la finca debe contener solo letras y espacios, y al menos 3 caracteres.");
-      };
-    } else {
-      errorMessages.push("Por favor, completa todos los campos.");
-    }
+    if (!this.newNameEstate.trim() || !regexName.test(this.newNameEstate.trim())) {
+      errorMessages.push("El nombre de la finca debe contener solo letras y espacios, y al menos 3 caracteres.");
+    };
     return errorMessages;
   };
 
@@ -116,11 +104,17 @@ export class RegisterComponent {
         this.toastr.error(message);
       });
     } else {
-      this.publicService.register(this.newUser, this.newEstablishment).subscribe({
+      this.publicService.register(this.newNameUser, this.newEmail, this.newPassword, this.newPhoneNumber, this.newNameEstate, this.newSidewalk, this.newMunicipality).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
           form.resetForm();
-          this.newEstablishment.municipality = "";
+          this.newNameUser = "";
+          this.newEmail = "";
+          this.newPassword = "";
+          this.newPhoneNumber = "";
+          this.newMunicipality = "";
+          this.newSidewalk = "";
+          this.newNameEstate = "";
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {

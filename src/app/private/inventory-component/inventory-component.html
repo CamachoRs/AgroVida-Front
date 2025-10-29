@@ -17,11 +17,46 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab"
             tabindex="0">
-            <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100" (click)="activateTab('nav-manage-tab')">
+            <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100"
+                (click)="activateTabItem('nav-manage-tab', null)">
                 <i class="fa-solid fa-plus"></i>
                 Agregar un producto
             </button>
-            <app-item-component (changeTab)="activateTabItem($event)" />
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre del producto</th>
+                            <th scope="col">Categoría</th>
+                            <th scope="col">Cantidad disponible + unidad medida</th>
+                            <th scope="col">Fecha de ingreso</th>
+                            <th scope="col">Fecha de vencimiento</th>
+                            <th scope="col">Proveedor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(item of inventoryItems; track item.id){
+                        <tr>
+                            <th class="fw-normal">{{item.nameItem}}</th>
+                            <td>{{item.nameCategory}}</td>
+                            <td>{{item.quantity}} + {{item.unitMeasurement}}</td>
+                            <td>{{item.entryDate | date:'dd/MM/yyyy'}}</td>
+                            <td>{{item.expiryDate | date:'dd/MM/yyyy'}}</td>
+                            <td>{{item.supplierName}}</td>
+                            <td>
+                                <button class="btn bg-color-1 rounded-5 fw-bold"
+                                    (click)="activateTabItem('nav-manage-tab', item)">
+                                    Detalle
+                                </button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <p class="text-center color-1">
+                    Has llegado al final del inventario
+                </p>
+            </div>
         </div>
         <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">
             <form #formulario="ngForm" class="row">
@@ -30,17 +65,17 @@
                         <label for="formGroupExampleInput1" class="form-label">Nombre:</label>
                         <input type="text" class="form-control" id="formGroupExampleInput1"
                             placeholder="Ingresa el nombre del producto que desea consultar" name="nameItem"
-                            [(ngModel)]="newItem.nameItem" />
+                            [(ngModel)]="inventoryNameItem" />
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Cantidad:</label>
                         <input type="number" class="form-control" id="formGroupExampleInput2"
-                            placeholder="Ingrese la cantidad total" name="amount" [(ngModel)]="newItem.quantity" />
+                            placeholder="Ingrese la cantidad total" name="amount" [(ngModel)]="inventoryQuantity" />
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput4" class="form-label">Categoría:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput4" name="category" [(ngModel)]="newItem.category.id">
+                            id="formGroupExampleInput4" name="category" [(ngModel)]="inventoryCategoryId">
                             <option value="0" selected disabled>Selecciona la categoría</option>
                             @for(item of categories; track item.id){
                             <option value="{{item.id}}">{{item.nameCategory}}</option>
@@ -53,12 +88,12 @@
                         <label for="formGroupExampleInput6" class="form-label">Fecha de vencimiento:</label>
                         <input type="date" class="form-control" id="formGroupExampleInput6"
                             placeholder="Ingrese o seleccione la fecha de vencimiento" name="expirationDate"
-                            [(ngModel)]="newItem.expiryDate" />
+                            [(ngModel)]="inventoryExpiryDate" [attr.min]="currentDate" />
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput5" class="form-label">Unidad de medida:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput5" name="unitMeasurement" [(ngModel)]="newItem.unitMeasurement">
+                            id="formGroupExampleInput5" name="unitMeasurement" [(ngModel)]="inventoryUnitMeasurement">
                             <option value="" selected disabled>Selecciona la unidad de medida</option>
                             @for (item of unitMeasurement; track item) {
                             <option value="{{item}}">{{item}}</option>
@@ -69,7 +104,7 @@
                         <label for="formGroupExampleInput7" class="form-label">Proveedor:</label>
                         <input type="text" class="form-control" id="formGroupExampleInput7"
                             placeholder="Ingrese el nombre del proveedor" name="supplier"
-                            [(ngModel)]="newItem.supplierName" />
+                            [(ngModel)]="inventorySupplierName" />
                     </div>
                 </div>
                 <div class="d-flex flex-column gap-2 justify-content-center align-items-center">
@@ -79,7 +114,7 @@
                         (click)="setInventory(formulario)">
                     <input type="submit" class="w-50 btn rounded-5 fw-bold" value="Eliminar producto"
                         (click)="deleteInventory(formulario)">
-                    <button class="btn rounded-5 d-sm-none" (click)="activateTab('nav-list-tab')">
+                    <button class="btn rounded-5 d-sm-none" (click)="activateTabItem('nav-list-tab', null)">
                         <i class="fa-solid fa-arrow-left"></i>
                         Volver al listado de productos
                     </button>

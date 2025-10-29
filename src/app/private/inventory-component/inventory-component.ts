@@ -1,40 +1,29 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NavComponent } from "../nav-component/nav-component";
-import { ItemComponent } from './item-component/item-component';
 import { FormsModule, NgForm } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { InventoryService } from '../../services/inventory.service';
-import { Inventory } from '../../models/Inventory.model';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
-import { Category } from '../../models/Category.model';
 
 @Component({
   selector: 'app-inventory-component',
-  imports: [NavComponent, ItemComponent, FormsModule, RouterModule, CommonModule],
+  imports: [NavComponent, FormsModule, RouterModule, CommonModule],
   templateUrl: './inventory-component.html',
   styleUrl: './inventory-component.css'
 })
 export class InventoryComponent implements OnInit {
   activeLink = "inventory";
-  @ViewChild(ItemComponent) itemComponent!: ItemComponent;
-  categories: Category[] = [];
-  newItem: Inventory = {
-    id: 0,
-    nameItem: "",
-    quantity: 0,
-    unitMeasurement: "",
-    entryDate: new Date().toISOString().split("T")[0],
-    expiryDate: new Date().toISOString().split("T")[0],
-    supplierName: "",
-    categoryId: 0,
-    category: {
-      id: 0,
-      nameCategory: "",
-      description: ""
-    }
-  };
-
+  inventoryId: number = -1;
+  inventoryNameItem: string = "";
+  inventoryQuantity: number = 0;
+  inventoryUnitMeasurement: string = "";
+  inventoryExpiryDate: string = "";
+  inventorySupplierName: string = "";
+  inventoryCategoryId: number = 0;
+  currentDate: string = "";
+  categories: any[] = [];
+  inventoryItems: any[] = [];
   unitMeasurement: string[] = [
     "Litro",
     "Mililitro",
@@ -47,17 +36,25 @@ export class InventoryComponent implements OnInit {
     "unidades"
   ];
 
-  constructor(private inventoryService: InventoryService, private toastr: ToastrService) { };
+  constructor(private inventoryService: InventoryService, private toastr: ToastrService, private changeDetector: ChangeDetectorRef) { };
 
   ngOnInit(): void {
     this.getCategory();
+    this.listInventory();
+
+    const today = new Date();
+    this.currentDate = today.toISOString().split('T')[0];
   };
 
-  activateTabItem(event: { tab: string, product: Inventory }) {
-    const { tab, product } = event;
-    product.expiryDate = new Date().toISOString().split("T")[0];
+  activateTabItem(tab: string, product: any | null) {
     if (product) {
-      this.newItem = { ...product };
+      this.inventoryId = product.id
+      this.inventoryNameItem = product.nameItem;
+      this.inventoryQuantity = product.quantity;
+      this.inventoryCategoryId = product.categoryId;
+      this.inventoryExpiryDate = product.expiryDate;
+      this.inventoryUnitMeasurement = product.unitMeasurement;
+      this.inventorySupplierName = product.supplierName;
     };
 
     const tabButton = document.getElementById(tab);
@@ -66,37 +63,43 @@ export class InventoryComponent implements OnInit {
     };
   };
 
-  activateTab(tabId: string) {
-    const tabButton = document.getElementById(tabId);
-    if (tabButton) {
-      tabButton.click();
-    };
-  };
-
   validations(): string[] {
     let errorMessages: string[] = [];
     const regexName = /^[A-Za-z\s]{3,50}$/;
-    if (this.newItem.category.id && this.newItem.expiryDate && this.newItem.nameItem && this.newItem.quantity && this.newItem.supplierName && this.newItem.unitMeasurement) {
-      if (this.newItem.category.id <= 0) {
-        errorMessages.push("Por favor, selecciona una categoría.");
-      };
-      if (!regexName.test(this.newItem.nameItem)) {
-        errorMessages.push("El nombre del producto debe contener solo letras y espacios, y tener al menos 3 caracteres.");
-      };
-      if (this.newItem.quantity < 0) {
-        errorMessages.push("El producto debe tener al menos una cantidad.");
-      };
-      if (!regexName.test(this.newItem.supplierName)) {
-        errorMessages.push("El nombre del proveedor debe contener solo letras y espacios, y tener al menos 3 caracteres.");
-      };
-      if (this.newItem.unitMeasurement == "") {
-        errorMessages.push("Por favor, selecciona un tipo de unidad.");
-      };
-    } else {
-      errorMessages.push("Por favor, completa todos los campos.");
+
+    if (!this.inventoryNameItem.trim() || !regexName.test(this.inventoryNameItem.trim())) {
+      errorMessages.push("El nombre del producto debe contener solo letras y espacios, y tener al menos 3 caracteres.");
+    };
+
+    if (this.inventoryQuantity < 0) {
+      errorMessages.push("El producto debe tener al menos una cantidad.");
+    };
+
+    if (this.inventoryCategoryId < 0) {
+      errorMessages.push("Por favor, selecciona una categoría.");
+    };
+
+    if (!this.inventoryExpiryDate.trim()) { };
+
+    if (!this.inventoryUnitMeasurement.trim()) {
+      errorMessages.push("Por favor, selecciona un tipo de unidad.");
+    };
+
+    if (!this.inventorySupplierName.trim() || !regexName.test(this.inventorySupplierName.trim())) {
+      errorMessages.push("El nombre del proveedor debe contener solo letras y espacios, y tener al menos 3 caracteres.");
     };
 
     return errorMessages;
+  };
+
+  resetInputs(): void {
+    this.inventoryId = -1;
+    this.inventoryNameItem = "";
+    this.inventoryQuantity = 0;
+    this.inventoryUnitMeasurement = "";
+    this.inventoryExpiryDate = "";
+    this.inventorySupplierName = "";
+    this.inventoryCategoryId = 0;
   };
 
   postInventory(form: NgForm) {
@@ -106,13 +109,13 @@ export class InventoryComponent implements OnInit {
         this.toastr.error(message);
       });
     } else {
-      this.newItem.categoryId = this.newItem.category.id
-      this.inventoryService.postInventory(this.newItem).subscribe({
+      this.inventoryService.postInventory(this.inventoryNameItem, this.inventoryQuantity, this.inventoryUnitMeasurement, this.inventoryExpiryDate, this.inventorySupplierName, this.inventoryCategoryId).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
           form.resetForm();
-          this.activateTab('nav-list-tab');
-          this.itemComponent.listInventory();
+          this.resetInputs();
+          this.activateTabItem('nav-list-tab', null);
+          this.listInventory();
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {
@@ -133,20 +136,20 @@ export class InventoryComponent implements OnInit {
   };
 
   setInventory(form: NgForm) {
-    if (this.newItem.id) {
-
+    if (this.inventoryId > 0) {
       const errorMessages = this.validations();
       if (errorMessages.length > 0) {
         errorMessages.forEach((message) => {
           this.toastr.error(message);
         });
       } else {
-        this.inventoryService.setInventory(this.newItem, this.newItem.id).subscribe({
+        this.inventoryService.setInventory(this.inventoryNameItem, this.inventoryQuantity, this.inventoryUnitMeasurement, this.inventoryExpiryDate, this.inventorySupplierName, this.inventoryCategoryId, this.inventoryId).subscribe({
           next: (responseCorrect) => {
             this.toastr.success(responseCorrect.message);
             form.resetForm();
-            this.activateTab('nav-list-tab');
-            this.itemComponent.listInventory();
+            this.resetInputs();
+            this.activateTabItem('nav-list-tab', null);
+            this.listInventory();
           },
           error: (responseError) => {
             if (responseError && responseError.error && responseError.error.errors) {
@@ -170,13 +173,14 @@ export class InventoryComponent implements OnInit {
   };
 
   deleteInventory(form: NgForm) {
-    if (this.newItem.id) {
-      this.inventoryService.deleteInventory(this.newItem.id).subscribe({
+    if (this.inventoryId > 0) {
+      this.inventoryService.deleteInventory(this.inventoryId).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
           form.resetForm();
-          this.activateTab('nav-list-tab');
-          this.itemComponent.listInventory();
+          this.resetInputs();
+          this.activateTabItem('nav-list-tab', null);
+          this.listInventory();
         },
         error: (responseError) => {
           this.toastr.error(responseError.message)
@@ -193,13 +197,24 @@ export class InventoryComponent implements OnInit {
         for (let category of responseCorrect.data) {
           this.categories.push({
             id: category.id,
-            nameCategory: category.nameCategory,
-            description: category.description
+            nameCategory: category.nameCategory
           });
         };
       },
       error: (responseError) => {
-        this.toastr.error(responseError.error)
+        this.toastr.error(responseError.error.message)
+      }
+    });
+  };
+
+  listInventory() {
+    this.inventoryService.getInventory().subscribe({
+      next: (responseCorrect) => {
+        this.inventoryItems = responseCorrect.data;
+        this.changeDetector.detectChanges();
+      },
+      error: (responseError) => {
+        this.toastr.error(responseError.error.message);
       }
     });
   };

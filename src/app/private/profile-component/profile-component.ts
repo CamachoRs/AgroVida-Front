@@ -1,8 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { NavComponent } from "../nav-component/nav-component";
 import { FormsModule, NgForm } from '@angular/forms';
-import { User } from '../../models/User.model';
-import { Establishment } from '../../models/Establishment.model';
 import { ProfileService } from '../../services/profile.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -14,21 +12,15 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProfileComponent implements OnInit {
   activeLink = "profile";
-  editUser: User = {
-    nameUser: "",
-    email: "",
-    password: "",
-    phoneNumber: 0,
-    role: "",
-    created_at: ""
-  };
-
-  editEstablishment: Establishment = {
-    municipality: "",
-    sidewalk: "",
-    nameEstate: ""
-  };
-
+  profileNameUser: string = "";
+  profileEmail: string = "";
+  profilePassword: string = "";
+  profilePhoneNumber: string = "";
+  profileRole: string = "";
+  profileCreated_at: string = "";
+  profileNameEstate: string = "";
+  profileSidewalk: string = "";
+  profileMunicipality: string = "";
   municipalities: string[] = [
     "Neiva",
     "Aipe",
@@ -72,16 +64,20 @@ export class ProfileComponent implements OnInit {
   constructor(private profileService: ProfileService, private toastr: ToastrService, private changeDetector: ChangeDetectorRef) { };
 
   ngOnInit(): void {
-    this.getUser();
+    this.getUser(sessionStorage.getItem("email"));
   };
 
-  getUser() {
-    const email = sessionStorage.getItem("email");
+  getUser(email: string | null) {
     this.profileService.getUser(email).subscribe({
       next: (responseCorrect) => {
-        this.editUser = responseCorrect.user;
-        this.editUser.created_at = responseCorrect.user.created_at.split("T")[0];
-        this.editEstablishment = responseCorrect.establishment;
+        this.profileNameUser = responseCorrect.user.nameUser;
+        this.profileEmail = responseCorrect.user.email;
+        this.profilePhoneNumber = responseCorrect.user.phoneNumber;
+        this.profileRole = responseCorrect.user.role;
+        this.profileCreated_at = responseCorrect.user.created_at.split("T")[0];
+        this.profileNameEstate = responseCorrect.establishment.nameEstate;
+        this.profileSidewalk = responseCorrect.establishment.sidewalk;
+        this.profileMunicipality = responseCorrect.establishment.municipality;
         this.changeDetector.detectChanges();
       },
       error: (responseError) => {
@@ -97,36 +93,32 @@ export class ProfileComponent implements OnInit {
     const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
     const regexPhoneNumber = /^(3[0-9]{9})$/;
 
-    if (this.editUser.nameUser?.trim() && this.editUser.email?.trim() && this.editUser.phoneNumber) {
-      if (!regexName.test(this.editUser.nameUser.trim())) {
-        errorMessages.push("El nombre de usuario debe contener solo letras y espacios, y tener al menos 3 caracteres.");
-      };
+    if (!this.profileNameUser.trim() || !regexName.test(this.profileNameUser.trim())) {
+      errorMessages.push("El nombre de usuario debe contener solo letras y espacios, y tener al menos 3 caracteres.");
+    };
 
-      if (!regexEmail.test(this.editUser.email.trim()) || this.editUser.email.trim().length < 10 || this.editUser.email.trim().length > 100) {
-        errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
-      };
+    if (!this.profileEmail.trim() || !regexEmail.test(this.profileEmail.trim()) || this.profileEmail.trim().length < 10 || this.profileEmail.trim().length > 100) {
+      errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
+    };
 
-      if (!regexPhoneNumber.test(this.editUser.phoneNumber.toString().trim())) {
-        errorMessages.push("El número de teléfono debe ser válido.");
-      };
-
-      if (this.editEstablishment.municipality == "") {
-        errorMessages.push("Por favor, selecciona un municipio.");
-      };
-
-      if (!regexName.test(this.editEstablishment.sidewalk.trim())) {
-        errorMessages.push("El nombre de la vereda debe contener solo letras y espacios, y tener al menos 3 caracteres.");
-      };
-
-      if (!regexName.test(this.editEstablishment.nameEstate.trim())) {
-        errorMessages.push("El nombre de la finca debe contener solo letras y espacios, y al menos 3 caracteres.");
-      };
-    } else {
-      errorMessages.push("Por favor, completa todos los campos.");
-    }
-
-    if (this.editUser.password?.trim() && !regexPassword.test(this.editUser.password.trim())) {
+    if (this.profilePassword.trim() && !regexPassword.test(this.profilePassword.trim())) {
       errorMessages.push("La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un símbolo especial.");
+    };
+
+    if (!this.profilePhoneNumber.trim() || !regexPhoneNumber.test(this.profilePhoneNumber.trim())) {
+      errorMessages.push("El número de teléfono debe ser válido.");
+    };
+
+    if (!this.profileMunicipality.trim()) {
+      errorMessages.push("Por favor, selecciona un municipio.");
+    };
+
+    if (!this.profileSidewalk.trim() || !regexName.test(this.profileSidewalk.trim())) {
+      errorMessages.push("El nombre de la vereda debe contener solo letras y espacios, y tener al menos 3 caracteres.");
+    };
+
+    if (!this.profileNameEstate.trim() || !regexName.test(this.profileNameEstate.trim())) {
+      errorMessages.push("El nombre de la finca debe contener solo letras y espacios, y al menos 3 caracteres.");
     };
     return errorMessages;
   };
@@ -138,12 +130,10 @@ export class ProfileComponent implements OnInit {
         this.toastr.error(message);
       });
     } else {
-      this.profileService.setUSer(this.editUser, this.editEstablishment).subscribe({
+      this.profileService.setUSer(this.profileNameUser, this.profileEmail, this.profilePassword, this.profilePhoneNumber, this.profileNameEstate, this.profileSidewalk, this.profileMunicipality).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
-          if (responseCorrect.email) {
-            sessionStorage.setItem("email", responseCorrect.email);
-          };
+          sessionStorage.setItem("email", responseCorrect.email);
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {

@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Inventory } from '../models/Inventory.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventoryService {
-  private urlBase = "http://192.168.101.6:8000/api";
+  private urlBase = "http://192.168.101.9:8000/api";
 
   constructor(private http: HttpClient) { };
 
@@ -14,17 +13,35 @@ export class InventoryService {
     return this.http.get<any>(`${this.urlBase}/inventory`);
   };
 
-  postInventory(inventory: Inventory) {
-    const data = { inventory };
+  postInventory(inventoryNameItem: string, inventoryQuantity: number, inventoryUnitMeasurement: string, inventoryExpiryDate: string, inventorySupplierName: string, inventoryCategoryId: number) {
+    const data = {
+      inventory: {
+        nameItem: inventoryNameItem.trim(),
+        quantity: inventoryQuantity,
+        unitMeasurement: inventoryUnitMeasurement.trim(),
+        expiryDate: inventoryExpiryDate.trim(),
+        supplierName: inventorySupplierName.trim(),
+        categoryId: inventoryCategoryId
+      }
+    };
     return this.http.post<any>(`${this.urlBase}/inventory`, data);
   };
 
-  setInventory(inventory: Inventory, id: number = 0) {
-    const data = { inventory };
+  setInventory(inventoryNameItem: string, inventoryQuantity: number, inventoryUnitMeasurement: string, inventoryExpiryDate: string, inventorySupplierName: string, inventoryCategoryId: number, id: number) {
+    const data = {
+      inventory: {
+        nameItem: inventoryNameItem.trim(),
+        quantity: inventoryQuantity,
+        unitMeasurement: inventoryUnitMeasurement.trim(),
+        expiryDate: inventoryExpiryDate.trim(),
+        supplierName: inventorySupplierName.trim(),
+        categoryId: inventoryCategoryId
+      }
+    };
     return this.http.put<any>(`${this.urlBase}/inventory/${id}`, data);
   }
 
-  deleteInventory(id: number = 0) {
+  deleteInventory(id: number) {
     return this.http.delete<any>(`${this.urlBase}/inventory/${id}`);
   }
 

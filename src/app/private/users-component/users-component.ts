@@ -1,37 +1,41 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NavComponent } from "../nav-component/nav-component";
-import { ItemComponent } from "./item-component/item-component";
-import { User } from '../../models/User.model';
 import { FormsModule, NgForm } from '@angular/forms';
 import { EmployService } from '../../services/employ.service';
 import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-users-component',
-  imports: [NavComponent, ItemComponent, FormsModule],
+  imports: [NavComponent, FormsModule, CommonModule],
   templateUrl: './users-component.html',
   styleUrl: './users-component.css'
 })
-export class UsersComponent {
+export class UsersComponent implements OnInit {
   activeLink = 'users';
-  @ViewChild(ItemComponent) itemComponent!: ItemComponent;
+  employId: number = -1;
+  employNameUser: string = "";
+  employEmail: string = "";
+  employPassword: string = "";
+  employPhoneNumber: string = "";
+  employStatus: string = "";
+  employRole: string = "";
+  listUsers: any[] = [];
 
-  listUsers: User[] = [];
-  newUser: User = {
-    id: 0,
-    nameUser: "",
-    email: "",
-    phoneNumber: 0,
-    role: "",
-    status: true
+  constructor(private employService: EmployService, private toastr: ToastrService, private changeDetector: ChangeDetectorRef) { };
+
+  ngOnInit(): void {
+    this.getUsers()
   };
 
-  constructor(private employService: EmployService, private toastr: ToastrService) { };
-
-  activateTabItem(event: { tab: string, user: User }) {
-    const { tab, user } = event;
-    if (user) {
-      this.newUser = { ...user };
+  activateTabItem(tab: string, employ: any | null) {
+    if (employ) {
+      this.employId = employ.id;
+      this.employNameUser = employ.nameUser;
+      this.employEmail = employ.email;
+      this.employPhoneNumber = employ.phoneNumber;
+      this.employRole = employ.role;
+      this.employStatus = employ.status;
     };
 
     const tabButton = document.getElementById(tab);
@@ -40,61 +44,67 @@ export class UsersComponent {
     };
   };
 
-  activateTab(tabId: string) {
-    const tabButton = document.getElementById(tabId);
-    if (tabButton) {
-      tabButton.click();
-    };
-  };
-
-  validations(password: string | undefined): string[] {
+  validations(isPasswordRequired: boolean): string[] {
     let errorMessages: string[] = [];
     const regexName = /^[A-Za-z\s]{3,50}$/;
     const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/;
     const regexPhoneNumber = /^(3[0-9]{9})$/;
 
-    if (this.newUser.nameUser?.trim() && this.newUser.email?.trim() && this.newUser.phoneNumber && this.newUser.role?.trim()) {
-      if (!regexName.test(this.newUser.nameUser.trim())) {
-        errorMessages.push("El nombre de usuario debe contener solo letras y espacios, y tener al menos 3 caracteres.");
-      };
+    if (!this.employNameUser.trim() || !regexName.test(this.employNameUser.trim())) {
+      errorMessages.push("El nombre de usuario debe contener solo letras y espacios, y tener al menos 3 caracteres.");
+    };
 
-      if (!regexEmail.test(this.newUser.email.trim()) || this.newUser.email.trim().length < 10 || this.newUser.email.trim().length > 100) {
-        errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
-      };
+    if (!this.employEmail.trim() || !regexEmail.test(this.employEmail.trim()) || this.employEmail.trim().length < 10 || this.employEmail.trim().length > 100) {
+      errorMessages.push("El correo electrónico debe ser válido y tener al menos 10 caracteres.");
+    };
 
-      if (!regexPhoneNumber.test(this.newUser.phoneNumber.toString().trim())) {
-        errorMessages.push("El número de teléfono debe ser válido.");
-      };
-
-      if (this.newUser.role.trim() == "") {
-        errorMessages.push("Por favor, selecciona un rol.");
-      };
-
-      if (password?.trim() && !regexPassword.test(password.trim())) {
+    if (isPasswordRequired) {
+      if (!this.employPassword.trim() || !regexPassword.test(this.employPassword.trim())) {
         errorMessages.push("La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un símbolo especial.");
       };
     } else {
-      errorMessages.push("Por favor, completa todos los campos.");
-    }
+      if (this.employPassword.trim() && !regexPassword.test(this.employPassword.trim())) {
+        errorMessages.push("La contraseña debe tener al menos 8 caracteres, incluyendo una letra, un número y un símbolo especial.");
+      };
+    };
+
+    if (!this.employPhoneNumber.trim() || !regexPhoneNumber.test(this.employPhoneNumber.trim())) {
+      errorMessages.push("El número de teléfono debe ser válido.");
+    };
+
+    if (!this.employRole.trim()) {
+      errorMessages.push("Por favor, selecciona un rol.");
+    };
 
     return errorMessages;
   };
 
+  resetinputs(): void {
+    this.employId = -1;
+    this.employNameUser = "";
+    this.employEmail = "";
+    this.employPassword = "";
+    this.employPhoneNumber = "";
+    this.employStatus = "";
+    this.employRole = "";
+  }
+
   postEmploy(form: NgForm) {
-    const errorMessages = this.validations(this.newUser.password);
+    const errorMessages = this.validations(true);
     if (errorMessages.length > 0) {
       errorMessages.forEach((message) => {
         this.toastr.error(message);
       });
     } else {
-      this.employService.postEmploy(this.newUser).subscribe({
+      const status = this.employStatus === "true";
+      this.employService.postEmploy(this.employNameUser, this.employEmail, this.employPassword, this.employPhoneNumber, status, this.employRole).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
           form.resetForm();
-          this.newUser.role = "";
-          this.activateTab("nav-list-tab");
-          this.itemComponent.listUsers();
+          this.resetinputs();
+          this.activateTabItem("nav-list-tab", null);
+          this.getUsers();
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {
@@ -104,6 +114,8 @@ export class UsersComponent {
                 this.toastr.error(message);
               });
             };
+          } else if (responseError && responseError.error && responseError.error.message) {
+            this.toastr.error(responseError.error.message);
           } else {
             this.toastr.error("Hubo un error al crear el usuario.");
           };
@@ -113,30 +125,21 @@ export class UsersComponent {
   };
 
   setEmploy(form: NgForm) {
-    if (this.newUser.id) {
-
-      let errorMessages: string[];
-      if (this.newUser.password?.trim()) {
-        errorMessages = this.validations(this.newUser.password.trim());
-      } else {
-        errorMessages = this.validations(undefined);
-      }
-
+    if (this.employId > 0) {
+      const errorMessages = this.validations(false);
       if (errorMessages.length > 0) {
         errorMessages.forEach((message) => {
           this.toastr.error(message);
         });
       } else {
-        if (typeof this.newUser.status === 'string') {
-          this.newUser.status = (this.newUser.status === 'true');
-        }
-        this.employService.setEmploy(this.newUser, this.newUser.id).subscribe({
+        const status = this.employStatus === "true";
+        this.employService.setEmploy(this.employNameUser, this.employEmail, this.employPassword, this.employPhoneNumber, status, this.employRole, this.employId).subscribe({
           next: (responseCorrect) => {
             this.toastr.success(responseCorrect.message);
             form.resetForm();
-            this.newUser.role = "";
-            this.activateTab("nav-list-tab");
-            this.itemComponent.listUsers();
+            this.resetinputs();
+            this.activateTabItem("nav-list-tab", null);
+            this.getUsers();
           },
           error: (responseError) => {
             if (responseError && responseError.error && responseError.error.errors) {
@@ -158,14 +161,14 @@ export class UsersComponent {
   };
 
   deleteEmploy(form: NgForm) {
-    if (this.newUser.id) {
-      this.employService.deleteEmploy(this.newUser.id).subscribe({
+    if (this.employId > 0) {
+      this.employService.deleteEmploy(this.employId).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
           form.resetForm();
-          this.newUser.role = "";
-          this.activateTab("nav-list-tab");
-          this.itemComponent.listUsers();
+          this.resetinputs();
+          this.activateTabItem("nav-list-tab", null);
+          this.getUsers();
         },
         error: (responseError) => {
           this.toastr.error(responseError.message)
@@ -174,5 +177,17 @@ export class UsersComponent {
     } else {
       this.toastr.error("¡Casi! Primero selecciona el usuario que deseas eliminar de la tabla.")
     };
+  };
+
+  getUsers() {
+    this.employService.getEmployees().subscribe({
+      next: (responseCorrect) => {
+        this.listUsers = responseCorrect.data;
+        this.changeDetector.detectChanges();
+      },
+      error: (responseError) => {
+        this.toastr.error(responseError.error.message);
+      }
+    });
   };
 }
