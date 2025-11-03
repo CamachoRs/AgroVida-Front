@@ -40,8 +40,8 @@
                             <th class="fw-normal">{{item.nameItem}}</th>
                             <td>{{item.nameCategory}}</td>
                             <td>{{item.quantity}} + {{item.unitMeasurement}}</td>
-                            <td>{{item.entryDate | date:'dd/MM/yyyy'}}</td>
-                            <td>{{item.expiryDate | date:'dd/MM/yyyy'}}</td>
+                            <td>{{item.entryDate | date:'dd-MM-yyyy'}}</td>
+                            <td>{{item.expiryDate | date:'dd-MM-yyyy'}}</td>
                             <td>{{item.supplierName}}</td>
                             <td>
                                 <button class="btn bg-color-1 rounded-5 fw-bold"
@@ -111,7 +111,7 @@
                     <input type="submit" class="w-50 btn bg-color-1 rounded-5 fw-bold" value="Nuevo producto"
                         (click)="postInventory(formulario)">
                     <input type="submit" class="w-50 btn bg-color-5 rounded-5 fw-bold" value="Guardar cambios"
-                        (click)="setInventory(formulario)">
+                        (click)="putInventory(formulario)">
                     <input type="submit" class="w-50 btn rounded-5 fw-bold" value="Eliminar producto"
                         (click)="deleteInventory(formulario)">
                     <button class="btn rounded-5 d-sm-none" (click)="activateTabItem('nav-list-tab', null)">

@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class InventoryService {
-  private urlBase = "http://192.168.101.9:8000/api";
+  private urlBase = "http://192.168.101.11:8000/api";
 
   constructor(private http: HttpClient) { };
 
@@ -27,7 +27,7 @@ export class InventoryService {
     return this.http.post<any>(`${this.urlBase}/inventory`, data);
   };
 
-  setInventory(inventoryNameItem: string, inventoryQuantity: number, inventoryUnitMeasurement: string, inventoryExpiryDate: string, inventorySupplierName: string, inventoryCategoryId: number, id: number) {
+  putInventory(inventoryNameItem: string, inventoryQuantity: number, inventoryUnitMeasurement: string, inventoryExpiryDate: string, inventorySupplierName: string, inventoryCategoryId: number, id: number) {
     const data = {
       inventory: {
         nameItem: inventoryNameItem.trim(),
@@ -46,6 +46,6 @@ export class InventoryService {
   }
 
   getCategory() {
-    return this.http.get<any>(`${this.urlBase}/category`);
+    return this.http.get<any>(`${this.urlBase}/categoryProduct`);
   };
 }

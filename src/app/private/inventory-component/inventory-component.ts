@@ -79,7 +79,9 @@ export class InventoryComponent implements OnInit {
       errorMessages.push("Por favor, selecciona una categoría.");
     };
 
-    if (!this.inventoryExpiryDate.trim()) { };
+    if (!this.inventoryExpiryDate.trim()) {
+      errorMessages.push("Por favor, selecciona una fecha de expiración.");
+    };
 
     if (!this.inventoryUnitMeasurement.trim()) {
       errorMessages.push("Por favor, selecciona un tipo de unidad.");
@@ -135,7 +137,7 @@ export class InventoryComponent implements OnInit {
     };
   };
 
-  setInventory(form: NgForm) {
+  putInventory(form: NgForm) {
     if (this.inventoryId > 0) {
       const errorMessages = this.validations();
       if (errorMessages.length > 0) {
@@ -143,7 +145,7 @@ export class InventoryComponent implements OnInit {
           this.toastr.error(message);
         });
       } else {
-        this.inventoryService.setInventory(this.inventoryNameItem, this.inventoryQuantity, this.inventoryUnitMeasurement, this.inventoryExpiryDate, this.inventorySupplierName, this.inventoryCategoryId, this.inventoryId).subscribe({
+        this.inventoryService.putInventory(this.inventoryNameItem, this.inventoryQuantity, this.inventoryUnitMeasurement, this.inventoryExpiryDate, this.inventorySupplierName, this.inventoryCategoryId, this.inventoryId).subscribe({
           next: (responseCorrect) => {
             this.toastr.success(responseCorrect.message);
             form.resetForm();
@@ -197,7 +199,7 @@ export class InventoryComponent implements OnInit {
         for (let category of responseCorrect.data) {
           this.categories.push({
             id: category.id,
-            nameCategory: category.nameCategory
+            nameCategory: category.name
           });
         };
       },

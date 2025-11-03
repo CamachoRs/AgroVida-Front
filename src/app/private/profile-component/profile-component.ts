@@ -64,11 +64,11 @@ export class ProfileComponent implements OnInit {
   constructor(private profileService: ProfileService, private toastr: ToastrService, private changeDetector: ChangeDetectorRef) { };
 
   ngOnInit(): void {
-    this.getUser(sessionStorage.getItem("email"));
+    this.getUser();
   };
 
-  getUser(email: string | null) {
-    this.profileService.getUser(email).subscribe({
+  getUser() {
+    this.profileService.getUser().subscribe({
       next: (responseCorrect) => {
         this.profileNameUser = responseCorrect.user.nameUser;
         this.profileEmail = responseCorrect.user.email;
@@ -81,7 +81,13 @@ export class ProfileComponent implements OnInit {
         this.changeDetector.detectChanges();
       },
       error: (responseError) => {
-        this.toastr.error(responseError.message);
+        if (responseError && responseError.error && responseError.error.message) {
+          this.toastr.error(responseError.error.message);
+        } else if (responseError && responseError.message) {
+          this.toastr.error(responseError.message);
+        } else {
+          this.toastr.error("Hubo un error al completar la información.");
+        };
       }
     });
   };
@@ -133,7 +139,6 @@ export class ProfileComponent implements OnInit {
       this.profileService.setUSer(this.profileNameUser, this.profileEmail, this.profilePassword, this.profilePhoneNumber, this.profileNameEstate, this.profileSidewalk, this.profileMunicipality).subscribe({
         next: (responseCorrect) => {
           this.toastr.success(responseCorrect.message);
-          sessionStorage.setItem("email", responseCorrect.email);
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {

@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class PrivateService {
-  private urlBase = "http://192.168.101.9:8000/api";
+  private urlBase = "http://192.168.101.11:8000/api";
 
   constructor(private http: HttpClient) { };
 

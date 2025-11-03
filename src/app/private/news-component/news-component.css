@@ -1,0 +1,11 @@
+input::placeholder {
+    color: var(--color-1);
+}
+
+textarea::placeholder {
+    color: var(--color-1);
+}
+
+#formFile {
+    color: var(--color-1);
+}
