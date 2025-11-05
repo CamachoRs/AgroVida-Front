@@ -5,7 +5,8 @@
     <nav class="d-none d-md-flex my-3">
         <div class="nav nav-underline" id="nav-tab" role="tablist">
             <button class="nav-link active color-1" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list"
-                type="button" role="tab" aria-controls="nav-list" aria-selected="true">
+                type="button" role="tab" aria-controls="nav-list" aria-selected="true"
+                (click)="activateTabItem('nav-list-tab', null)">
                 Listado de empleados
             </button>
             <button class="nav-link color-1" id="nav-manage-tab" data-bs-toggle="tab" data-bs-target="#nav-manage"

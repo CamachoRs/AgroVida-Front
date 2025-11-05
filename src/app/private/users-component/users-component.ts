@@ -28,6 +28,16 @@ export class UsersComponent implements OnInit {
     this.getUsers()
   };
 
+  resetinputs(): void {
+    this.employId = -1;
+    this.employNameUser = "";
+    this.employEmail = "";
+    this.employPassword = "";
+    this.employPhoneNumber = "";
+    this.employStatus = "";
+    this.employRole = "";
+  }
+
   activateTabItem(tab: string, employ: any | null) {
     if (employ) {
       this.employId = employ.id;
@@ -36,6 +46,8 @@ export class UsersComponent implements OnInit {
       this.employPhoneNumber = employ.phoneNumber;
       this.employRole = employ.role;
       this.employStatus = employ.status;
+    } else {
+      this.resetinputs();
     };
 
     const tabButton = document.getElementById(tab);
@@ -80,22 +92,14 @@ export class UsersComponent implements OnInit {
     return errorMessages;
   };
 
-  resetinputs(): void {
-    this.employId = -1;
-    this.employNameUser = "";
-    this.employEmail = "";
-    this.employPassword = "";
-    this.employPhoneNumber = "";
-    this.employStatus = "";
-    this.employRole = "";
-  }
-
   postEmploy(form: NgForm) {
     const errorMessages = this.validations(true);
     if (errorMessages.length > 0) {
       errorMessages.forEach((message) => {
         this.toastr.error(message);
       });
+    } else if (this.employId > 0) {
+      this.toastr.error("No es posible añadir un usuario con características idénticas");
     } else {
       const status = this.employStatus === "true";
       this.employService.postEmploy(this.employNameUser, this.employEmail, this.employPassword, this.employPhoneNumber, status, this.employRole).subscribe({

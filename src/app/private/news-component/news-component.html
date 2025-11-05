@@ -46,7 +46,7 @@
         </div>
     </div>
     }
-    <p class="text-center color-1">Has llegado al final de las novedades</p>
+    <p class="text-center color-1 my-5">Has llegado al final de las novedades</p>
     <!-- Modal - ver noticia -->
     <div class="modal fade" id="exampleModal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-labelledby="exampleModal1Label" aria-hidden="true">
@@ -127,13 +127,14 @@
                     </div>
                     <div class="modal-footer">
                         @if(titleModal=="Agregar"){
-                        <input type="submit" value="Agregar" class="btn rounded-5 bg-color-1"
+                        <input type="submit" value="Agregar" class="btn rounded-5 bg-color-1 fw-bold"
                             (click)="postNews(formulario)">
                         }@else{
-                        <input type="submit" value="Actualizar" class="btn rounded-5 bg-color-1"
+                        <input type="submit" value="Actualizar" class="btn rounded-5 bg-color-1 fw-bold"
                             (click)="putNews(formulario)">
                         }
-                        <input type="submit" value="Cancelar" class="btn rounded-5 bg-color-5" data-bs-dismiss="modal">
+                        <input type="submit" value="Cancelar" class="btn rounded-5 bg-color-5 fw-bold"
+                            data-bs-dismiss="modal">
                     </div>
                 </form>
             </div>

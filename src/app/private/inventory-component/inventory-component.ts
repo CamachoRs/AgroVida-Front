@@ -25,14 +25,14 @@ export class InventoryComponent implements OnInit {
   categories: any[] = [];
   inventoryItems: any[] = [];
   unitMeasurement: string[] = [
-    "Litro",
-    "Mililitro",
-    "Galón",
-    "Gramo",
-    "Kilogramo",
-    "Arroba",
-    "Libra",
-    "Tonelada",
+    "litro",
+    "mililitro",
+    "galón",
+    "gramo",
+    "kilogramo",
+    "arroba",
+    "libra",
+    "tonelada",
     "unidades"
   ];
 
@@ -46,15 +46,27 @@ export class InventoryComponent implements OnInit {
     this.currentDate = today.toISOString().split('T')[0];
   };
 
+  resetInputs(): void {
+    this.inventoryId = -1;
+    this.inventoryNameItem = "";
+    this.inventoryQuantity = 0;
+    this.inventoryUnitMeasurement = "";
+    this.inventoryExpiryDate = "";
+    this.inventorySupplierName = "";
+    this.inventoryCategoryId = 0;
+  };
+
   activateTabItem(tab: string, product: any | null) {
     if (product) {
       this.inventoryId = product.id
       this.inventoryNameItem = product.nameItem;
       this.inventoryQuantity = product.quantity;
       this.inventoryCategoryId = product.categoryId;
-      this.inventoryExpiryDate = product.expiryDate;
+      this.inventoryExpiryDate = product.expiryDate.split(" ")[0].trim();
       this.inventoryUnitMeasurement = product.unitMeasurement;
       this.inventorySupplierName = product.supplierName;
+    } else {
+      this.resetInputs();
     };
 
     const tabButton = document.getElementById(tab);
@@ -94,22 +106,14 @@ export class InventoryComponent implements OnInit {
     return errorMessages;
   };
 
-  resetInputs(): void {
-    this.inventoryId = -1;
-    this.inventoryNameItem = "";
-    this.inventoryQuantity = 0;
-    this.inventoryUnitMeasurement = "";
-    this.inventoryExpiryDate = "";
-    this.inventorySupplierName = "";
-    this.inventoryCategoryId = 0;
-  };
-
   postInventory(form: NgForm) {
     const errorMessages = this.validations();
     if (errorMessages.length > 0) {
       errorMessages.forEach((message) => {
         this.toastr.error(message);
       });
+    } else if (this.inventoryId > 0) {
+      this.toastr.error("No es posible añadir un producto con características similares");
     } else {
       this.inventoryService.postInventory(this.inventoryNameItem, this.inventoryQuantity, this.inventoryUnitMeasurement, this.inventoryExpiryDate, this.inventorySupplierName, this.inventoryCategoryId).subscribe({
         next: (responseCorrect) => {
