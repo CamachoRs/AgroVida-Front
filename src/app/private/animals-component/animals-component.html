@@ -151,7 +151,8 @@
                     <i class="fa-solid fa-plus"></i>
                     Agregar revisión
                 </button>
-                <button class="btn rounded-5 my-2 mx-auto" (click)="activateTabItem('nav-list-tab', null, null, null)">
+                <button class="btn rounded-5 my-2 mx-auto d-sm-none"
+                    (click)="activateTabItem('nav-list-tab', null, null, null)">
                     <i class="fa-solid fa-arrow-left"></i>
                     Ir al listado de animales
                 </button>
@@ -235,10 +236,11 @@
                             <label for="formFile1" class="form-label">Adjuntar archivos:</label>
                             <input class="form-control" type="file" id="formFile1"
                                 (change)="onImageSelected($event, 'file')">
+                            @if(file){
                             <button class="btn rounded-5 mt-2" (click)="downloadMedicalFile(medicalId)">
                                 Descargar archivo
                             </button>
-                            <!-- Si existe un archivo quiero que me aparezca acá para poder descargar -->
+                            }
                         </div>
                         <h3 class="fw-bold my-2">Medicamentos aplicados</h3>
                         <div class="mb-3">
@@ -275,7 +277,8 @@
                         <input type="submit" value="Agregar" class="btn rounded-5 bg-color-1 fw-bold"
                             (click)="postMedical(formulario1)">
                         }@else{
-                        <input type="submit" value="Guardar" class="btn rounded-5 bg-color-1 fw-bold">
+                        <input type="submit" value="Guardar" class="btn rounded-5 bg-color-1 fw-bold"
+                            (click)="putMedical(formulario1)">
                         }
                         <input type="submit" value="Cancelar" class="btn rounded-5 bg-color-5 fw-bold"
                             data-bs-dismiss="modal">

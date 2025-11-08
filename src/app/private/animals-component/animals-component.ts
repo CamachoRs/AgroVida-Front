@@ -95,6 +95,7 @@ export class AnimalsComponent {
       this.file = medical.file;
     } else if (tab != "nav-review-tab") {
       this.resetInputs();
+      this.medicalInformation = [];
     };
 
     const tabButton = document.getElementById(tab);
@@ -106,6 +107,14 @@ export class AnimalsComponent {
   activeModal(title: string | null) {
     if (title) {
       this.titleModal = title;
+      this.medicalId = -1;
+      this.reviewType = "";
+      this.observationsMedical = undefined;
+      this.reviewerName = "";
+      this.medicationName = undefined;
+      this.dose = undefined;
+      this.administrationRoute = undefined;
+      this.file = undefined;
     }
   };
 
@@ -253,6 +262,39 @@ export class AnimalsComponent {
         }
       });
     };
+  };
+
+  putMedical(form: NgForm) {
+    const regexName = /^[A-Za-z\s]{3,50}$/;
+    let validation = true;
+    console.log(this.animalId);
+
+    if (!regexName.test(this.reviewerName.trim())) {
+      this.toastr.error("El nombre de la persona debe contener solo letras y espacios, y tener al menos 3 caracteres.");
+      validation = false;
+    };
+    if (this.animalId > 0 && validation) {
+      this.animalService.putMedical(this.animalId, this.reviewType, this.observationsMedical, this.reviewerName, this.medicationName, this.dose, this.administrationRoute, this.file, this.medicalId).subscribe({
+        next: (responseCorrect) => {
+          this.toastr.success(responseCorrect.message);
+          this.getMedical();
+        },
+        error: (responseError) => {
+          if (responseError && responseError.error && responseError.error.errors) {
+            const fieldsErrors = responseError.error.errors;
+            for (const field in fieldsErrors) {
+              fieldsErrors[field].forEach((message: string) => {
+                this.toastr.error(message);
+              });
+            };
+          } else if (responseError && responseError.error && responseError.error.message) {
+            this.toastr.error(responseError.error.message);
+          } else {
+            this.toastr.error("Hubo un error registrar el producto.");
+          };
+        }
+      });
+    }
   };
 
   deleteAnimal(form: NgForm) {

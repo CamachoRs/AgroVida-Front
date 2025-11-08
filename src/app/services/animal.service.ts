@@ -105,7 +105,7 @@ export class AnimalService {
     if (administrationRoute) {
       formData.append("medical[administrationRoute]", administrationRoute.trim());
     };
-    if (file) {
+    if (file instanceof File) {
       formData.append("medical[file]", file, file.name);
     };
 
