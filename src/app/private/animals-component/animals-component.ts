@@ -3,17 +3,23 @@ import { NavComponent } from "../nav-component/nav-component";
 import { AnimalService } from '../../services/animal.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule, NgForm } from '@angular/forms';
+import { NotExpr } from '@angular/compiler';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-animals-component',
-  imports: [NavComponent, FormsModule],
+  imports: [NavComponent, FormsModule, CommonModule],
   templateUrl: './animals-component.html',
   styleUrl: './animals-component.css'
 })
 export class AnimalsComponent {
   activeLink = "animals";
+  titleModal = "Detalle de la revisión";
   animalsItems: any[] = [];
+  animalCategories: any[] = []
+  medicalInformation: any[] = []
   categoryId: number = -1;
+  animalId: number = -1;
   name: string = "";
   sex: string = "";
   healthStatus: string = "";
@@ -23,7 +29,14 @@ export class AnimalsComponent {
   image: File | undefined = undefined;
   id: number = -1;
   createdAt: string = "";
-  animalCategories: any[] = []
+  medicalId: number = -1;
+  reviewType: string = "";
+  observationsMedical: string | undefined = undefined
+  reviewerName: string = "";
+  medicationName: string | undefined = undefined;
+  dose: string | undefined = undefined;
+  administrationRoute: string | undefined = undefined;
+  file: File | undefined = undefined;
 
   constructor(private animalService: AnimalService, private toastr: ToastrService, private changeDetector: ChangeDetectorRef) { };
 
@@ -36,6 +49,7 @@ export class AnimalsComponent {
 
   resetInputs(): void {
     this.categoryId = -1;
+    this.animalId = -1;
     this.name = "";
     this.sex = "";
     this.healthStatus = "";
@@ -45,11 +59,21 @@ export class AnimalsComponent {
     this.image = undefined;
     this.id = -1;
     this.createdAt = "";
+    this.medicalId = -1;
+    this.reviewType = "";
+    this.observationsMedical = undefined;
+    this.reviewerName = "";
+    this.medicationName = undefined;
+    this.dose = undefined;
+    this.administrationRoute = undefined;
+    this.file = undefined;
   };
 
-  activateTabItem(tab: string, animal: any | null) {
+  activateTabItem(tab: string, animal: any | null, medical: any | null, title: string | null) {
+    this.activeModal(title);
     if (animal) {
       this.categoryId = animal.categoryId;
+      this.animalId = animal.id
       this.name = animal.name;
       this.sex = animal.sex;
       this.healthStatus = animal.healthStatus;
@@ -59,7 +83,17 @@ export class AnimalsComponent {
       this.image = animal.image;
       this.id = animal.id;
       this.createdAt = animal.created_at.split('T')[0];
-    } else {
+      this.getMedical();
+    } else if (medical) {
+      this.medicalId = medical.id;
+      this.reviewType = medical.reviewType;
+      this.observationsMedical = medical.observations;
+      this.reviewerName = medical.reviewerName;
+      this.medicationName = medical.medicationName;
+      this.dose = medical.dose;
+      this.administrationRoute = medical.administrationRoute ?? undefined;
+      this.file = medical.file;
+    } else if (tab != "nav-review-tab") {
       this.resetInputs();
     };
 
@@ -69,11 +103,23 @@ export class AnimalsComponent {
     };
   };
 
-  onImageSelected(event: any): void {
-    const file = event.target.files[0];
-    if (file && file instanceof File) {
-      this.image = file;
+  activeModal(title: string | null) {
+    if (title) {
+      this.titleModal = title;
     }
+  };
+
+  onImageSelected(event: any, campo: string): void {
+    const file = event.target.files[0];
+    if (campo === "image") {
+      if (file && file instanceof File) {
+        this.image = file;
+      }
+    } else {
+      if (file && file instanceof File) {
+        this.file = file;
+      }
+    };
   }
 
   validations(): string[] {
@@ -122,6 +168,42 @@ export class AnimalsComponent {
           form.resetForm();
           this.resetInputs();
           this.getAnimals();
+        },
+        error: (responseError) => {
+          if (responseError && responseError.error && responseError.error.errors) {
+            const fieldsErrors = responseError.error.errors;
+            for (const field in fieldsErrors) {
+              fieldsErrors[field].forEach((message: string) => {
+                this.toastr.error(message);
+              });
+            };
+          } else if (responseError && responseError.error && responseError.error.message) {
+            this.toastr.error(responseError.error.message);
+          } else {
+            this.toastr.error("Hubo un error registrar el producto.");
+          };
+        }
+      });
+    };
+  };
+
+  postMedical(form: NgForm) {
+    const regexName = /^[A-Za-z\s]{3,50}$/;
+    let validation = true;
+    if (!this.reviewType.trim()) {
+      this.toastr.error("Por favor, selecciona el tipo de revisión");
+      validation = false;
+    };
+    if (!this.reviewerName.trim() || !regexName.test(this.reviewerName.trim())) {
+      this.toastr.error("El nombre de la persona debe contener solo letras y espacios, y tener al menos 3 caracteres.");
+      validation = false;
+    };
+    if (this.animalId > 0 && validation) {
+      this.animalService.postMedical(this.animalId, this.reviewType, this.observationsMedical, this.reviewerName, this.medicationName, this.dose, this.administrationRoute, this.file).subscribe({
+        next: (responseCorrect) => {
+          this.toastr.success(responseCorrect.message);
+          form.resetForm();
+          this.getMedical();
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {
@@ -203,7 +285,7 @@ export class AnimalsComponent {
     });
   };
 
-  getAnimalCategories(): void {
+  getAnimalCategories() {
     this.animalService.getAnimalCategories().subscribe({
       next: (responseCorrect) => {
         this.animalCategories = responseCorrect.data;
@@ -213,4 +295,31 @@ export class AnimalsComponent {
       }
     });
   };
+
+  getMedical() {
+    this.animalService.getMedical(this.animalId).subscribe({
+      next: (responseCorrect) => {
+        this.medicalInformation = responseCorrect.data;
+        this.changeDetector.detectChanges();
+      },
+      error: (responseError) => {
+        this.toastr.error(responseError.error.message);
+      }
+    });
+  };
+
+  downloadMedicalFile(medicalId: number): void {
+    this.animalService.downloadMedicalFile(medicalId).subscribe({
+      next: (response: Blob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(response);
+        link.download = `medical-review-${medicalId}`;
+        link.click();
+      },
+      error: (error) => {
+        this.toastr.error("Error al descargar el archivo.");
+      }
+    });
+  }
+
 }

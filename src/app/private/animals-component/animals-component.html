@@ -6,7 +6,7 @@
         <div class="nav nav-underline" id="nav-tab" role="tablist">
             <button class="nav-link active color-1" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list"
                 type="button" role="tab" aria-controls="nav-list" aria-selected="true"
-                (click)="activateTabItem('nav-list-tab', null)">
+                (click)="activateTabItem('nav-list-tab', null, null, null)">
                 Listado de animales
             </button>
             <button class="nav-link color-1" id="nav-manage-tab" data-bs-toggle="tab" data-bs-target="#nav-manage"
@@ -23,7 +23,7 @@
         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab"
             tabindex="0">
             <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100"
-                (click)="activateTabItem('nav-manage-tab', null)">
+                (click)="activateTabItem('nav-manage-tab', null, null, null)">
                 <i class="fa-solid fa-plus"></i>
                 Agregar un animal
             </button>
@@ -35,7 +35,7 @@
                         <h5 class="card-title">{{item.name}}</h5>
                         <p class="card-text">{{item.categoryName}} - {{item.sex}}</p>
                         <button class="btn bg-color-1 rounded-5 fw-bold w-100"
-                            (click)="activateTabItem('nav-manage-tab', item)">
+                            (click)="activateTabItem('nav-manage-tab', item, null, null)">
                             Detalle
                         </button>
                     </div>
@@ -68,8 +68,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Adjuntar foto del animal:</label>
-                        <input class="form-control" type="file" id="formFile" (change)="onImageSelected($event)"
-                            accept="image/">
+                        <input class="form-control" type="file" id="formFile"
+                            (change)="onImageSelected($event, 'image')" accept="image/">
                     </div>
                 </div>
                 <div class="col col-12 col-md-6">
@@ -131,12 +131,157 @@
                         (click)="putAnimal(formulario)">
                     <input type="submit" class="w-50 btn rounded-5 fw-bold" value="Eliminar animal"
                         (click)="deleteAnimal(formulario)">
-                    <button class="btn rounded-5 d-sm-none" (click)="activateTabItem('nav-list-tab', null)">
+                    <button class="btn rounded-5 d-sm-none" (click)="activateTabItem('nav-list-tab', null, null, null)">
                         <i class="fa-solid fa-arrow-left"></i>
-                        Volver al listado de productos
+                        Ir listado de animales
+                    </button>
+                    <button class="btn rounded-5 d-sm-none"
+                        (click)="activateTabItem('nav-review-tab', null, null, null)">
+                        Ir al historial de revisiones médicas
+                        <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
             </form>
+        </div>
+        <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab" tabindex="0">
+            @if(animalId>0){
+            <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center">
+                <button class="btn bg-color-1 fw-bold rounded-5 my-2 mx-auto" data-bs-toggle="modal"
+                    data-bs-target="#exampleModal1" (click)=" activeModal('Agregar revisión')">
+                    <i class="fa-solid fa-plus"></i>
+                    Agregar revisión
+                </button>
+                <button class="btn rounded-5 my-2 mx-auto" (click)="activateTabItem('nav-list-tab', null, null, null)">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Ir al listado de animales
+                </button>
+            </div>
+            }
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tipo de revisión</th>
+                            <th scope="col">Fecha de revisión</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(item of medicalInformation; track item.id){
+                        <tr>
+                            <th class="fw-normal">{{item.reviewType}}</th>
+                            <td>{{item.created_at | date:'dd-MM-yyyy'}}</td>
+                            <td>
+                                <button class="btn bg-color-1 rounded-5 fw-bold" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal1"
+                                    (click)="activateTabItem('exampleModal1', null, item, 'Detalle de la revisión')">
+                                    Detalle
+                                </button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                <p class="text-center color-1">
+                    @if(animalId > 0){
+                    Has llegado al final del inventario
+                    } @else {
+                    Debes seleccionar un animal desde la lista
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="exampleModal1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="exampleModal1Label" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title fs-5 fw-bold" id="exampleModal1Label">
+                        {{titleModal}}
+                    </h2>
+                    <button type="button" id="closeExampleModal1" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <form #formulario1="ngForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput9" class="form-label">Tipo de revisión:</label>
+                            <select class="form-select color-1" aria-label="Default select example"
+                                id="formGroupExampleInput9" name="reviewType" [(ngModel)]="reviewType">
+                                <option value="" selected disabled>Selecciona el tipo de revisión</option>
+                                <option value="Chequeo general">Chequeo general</option>
+                                <option value="Tratamiento">Tratamiento</option>
+                                <option value="Vacunación">Vacunación</option>
+                                <option value="Examen">Examen</option>
+                                <option value="Emergencia">Emergencia</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput10" class="form-label">Observaciones:</label>
+                            <textarea class="form-control" id="formGroupExampleInput10"
+                                placeholder="Ingresa alguna observación del animal" name="observationsMedical"
+                                [(ngModel)]="observationsMedical"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput11" class="form-label">
+                                Nombre de la persona que realizó la revisión:
+                            </label>
+                            <input type="text" class="form-control" id="formGroupExampleInput11"
+                                placeholder="Ingresa el nombre de la persona que realizó la revisión"
+                                name="reviewerName" [(ngModel)]="reviewerName" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFile1" class="form-label">Adjuntar archivos:</label>
+                            <input class="form-control" type="file" id="formFile1"
+                                (change)="onImageSelected($event, 'file')">
+                            <button class="btn rounded-5 mt-2" (click)="downloadMedicalFile(medicalId)">
+                                Descargar archivo
+                            </button>
+                            <!-- Si existe un archivo quiero que me aparezca acá para poder descargar -->
+                        </div>
+                        <h3 class="fw-bold my-2">Medicamentos aplicados</h3>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput12" class="form-label">
+                                Nombre:
+                            </label>
+                            <input type="text" class="form-control" id="formGroupExampleInput12"
+                                placeholder="Ingresa el nombre del medicamento que usaron" name="medicationName"
+                                [(ngModel)]="medicationName" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput13" class="form-label">
+                                Cantidad y medida:
+                            </label>
+                            <input type="text" class="form-control" id="formGroupExampleInput13"
+                                placeholder="Ingresa la cantidad de la dosis que se suministro" name="dose"
+                                [(ngModel)]="dose" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="formGroupExampleInput14" class="form-label">Vía de administración:</label>
+                            <select class="form-select color-1" aria-label="Default select example"
+                                id="formGroupExampleInput14" name="administrationRoute"
+                                [(ngModel)]="administrationRoute">
+                                <option value="undefined" selected disabled>Selecciona el tipo de revisión</option>
+                                <option value="Oral">Oral</option>
+                                <option value="Inyectable">Inyectable</option>
+                                <option value="Tópico">Tópico</option>
+                                <option value="Intervenoso">Intervenoso</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        @if(titleModal == "Agregar revisión"){
+                        <input type="submit" value="Agregar" class="btn rounded-5 bg-color-1 fw-bold"
+                            (click)="postMedical(formulario1)">
+                        }@else{
+                        <input type="submit" value="Guardar" class="btn rounded-5 bg-color-1 fw-bold">
+                        }
+                        <input type="submit" value="Cancelar" class="btn rounded-5 bg-color-5 fw-bold"
+                            data-bs-dismiss="modal">
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

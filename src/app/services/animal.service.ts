@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -57,4 +58,63 @@ export class AnimalService {
   getAnimalCategories() {
     return this.http.get<any>(`${this.urlBase}/categoryAnimal`);
   };
+
+  getMedical(id: number) {
+    return this.http.get<any>(`${this.urlBase}/medical/${id}`)
+  };
+
+  postMedical(animalId: number, reviewType: string, observations: string | undefined, reviewerName: string, medicationName: string | undefined, dose: string | undefined, administrationRoute: string | undefined, file: File | undefined) {
+    const formData: FormData = new FormData();
+    formData.append("medical[animalId]", animalId.toString().trim());
+    formData.append("medical[reviewType]", reviewType.trim());
+    formData.append("medical[reviewerName]", reviewerName.trim());
+
+    if (observations) {
+      formData.append("medical[observations]", observations.trim());
+    };
+    if (medicationName) {
+      formData.append("medical[medicationName]", medicationName.trim());
+    };
+    if (dose) {
+      formData.append("medical[dose]", dose.trim());
+    };
+    if (administrationRoute) {
+      formData.append("medical[administrationRoute]", administrationRoute.trim());
+    };
+    if (file) {
+      formData.append("medical[file]", file, file.name);
+    };
+    return this.http.post<any>(`${this.urlBase}/medical`, formData);
+  };
+
+  putMedical(animalId: number, reviewType: string, observations: string | undefined, reviewerName: string, medicationName: string | undefined, dose: string | undefined, administrationRoute: string | undefined, file: File | undefined, id: number) {
+    const formData: FormData = new FormData();
+    formData.append("medical[animalId]", animalId.toString().trim());
+    formData.append("medical[reviewType]", reviewType.trim());
+    formData.append("medical[reviewerName]", reviewerName.trim());
+
+    if (observations) {
+      formData.append("medical[observations]", observations.trim());
+    };
+    if (medicationName) {
+      formData.append("medical[medicationName]", medicationName.trim());
+    };
+    if (dose) {
+      formData.append("medical[dose]", dose.trim());
+    };
+    if (administrationRoute) {
+      formData.append("medical[administrationRoute]", administrationRoute.trim());
+    };
+    if (file) {
+      formData.append("medical[file]", file, file.name);
+    };
+
+    return this.http.post<any>(`${this.urlBase}/medical/${id}`, formData)
+  };
+
+  downloadMedicalFile(id: number): Observable<Blob> {
+    return this.http.get(`${this.urlBase}/medical-reviews/${id}/download`, {
+      responseType: 'blob'
+    });
+  }
 }
