@@ -1,0 +1,142 @@
+<app-nav-component [activeLink]="activeLink" />
+<div class="px-sm-5">
+    <h2 class="fw-bold mt-4">Animales</h2>
+    <p class="mb-4">Estos son los animales bajo tu cuidado. ¡Gracias por mantenerlos saludables!</p>
+    <nav class="d-none d-md-flex my-3">
+        <div class="nav nav-underline" id="nav-tab" role="tablist">
+            <button class="nav-link active color-1" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list"
+                type="button" role="tab" aria-controls="nav-list" aria-selected="true"
+                (click)="activateTabItem('nav-list-tab', null)">
+                Listado de animales
+            </button>
+            <button class="nav-link color-1" id="nav-manage-tab" data-bs-toggle="tab" data-bs-target="#nav-manage"
+                type="button" role="tab" aria-controls="nav-manage" aria-selected="false">
+                Detalle del animal
+            </button>
+            <button class="nav-link color-1" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review"
+                type="button" role="tab" aria-controls="nav-review" aria-selected="false">
+                Información médica
+            </button>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab"
+            tabindex="0">
+            <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100"
+                (click)="activateTabItem('nav-manage-tab', null)">
+                <i class="fa-solid fa-plus"></i>
+                Agregar un animal
+            </button>
+            <div class="row">
+                @for(item of animalsItems; track item.id){
+                <div class="card border-0 col-12 col-sm-6 col-md-4 col-lg-3 my-2">
+                    <img src="http://192.168.101.11:8000/{{item.image}}" class="card-img-top rounded-5" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{item.name}}</h5>
+                        <p class="card-text">{{item.categoryName}} - {{item.sex}}</p>
+                        <button class="btn bg-color-1 rounded-5 fw-bold w-100"
+                            (click)="activateTabItem('nav-manage-tab', item)">
+                            Detalle
+                        </button>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+        <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">
+            <form #formulario="ngForm" class="row">
+                @if(image){
+                <img src="http://192.168.101.11:8000/{{image}}" class="img-fluid rounded-5 col-7 mx-auto my-3"
+                    alt="...">
+                }
+                <div class="col col-12 col-md-6">
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput1" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput1"
+                            placeholder="Ingresa el nombre del producto que desea consultar" name="name"
+                            [(ngModel)]="name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput2" class="form-label">Peso actual (kilogramos):</label>
+                        <input type="number" class="form-control" id="formGroupExampleInput2"
+                            placeholder="Ingrese el peso actual del animal" name="weight" [(ngModel)]="weight" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput3" class="form-label">Fecha de ingreso:</label>
+                        <input type="date" class="form-control" id="formGroupExampleInput3" name="createdAt"
+                            [(ngModel)]="createdAt" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Adjuntar foto del animal:</label>
+                        <input class="form-control" type="file" id="formFile" (change)="onImageSelected($event)"
+                            accept="image/">
+                    </div>
+                </div>
+                <div class="col col-12 col-md-6">
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput4" class="form-label">Especie:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput4" name="categoryId" [(ngModel)]="categoryId">
+                            <option value="-1" selected disabled>Selecciona la especie del animal</option>
+                            @for (item of animalCategories; track item.id) {
+                            <option value="{{item.id}}">{{item.name}}</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput5" class="form-label">Sexo:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput5" name="sex" [(ngModel)]="sex">
+                            <option value="" selected disabled>Selecciona el sexo del animal</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput6" class="form-label">Rango de edad:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput6" name="ageRange" [(ngModel)]="ageRange">
+                            <option value="" selected disabled>Selecciona el rango de edada del animal</option>
+                            <option value="Cría">Cría</option>
+                            <option value="Juvenil">Juvenil</option>
+                            <option value="Adulto">Adulto</option>
+                            <option value="Maduro">Maduro</option>
+                            <option value="Geriátrico">Geriátrico</option>
+                            <option value="Desconocido">Desconocido</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput7" class="form-label">Estado de salud:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput7" name="healthStatus" [(ngModel)]="healthStatus">
+                            <option value="" selected disabled>Selecciona el estado de salud del animal</option>
+                            <option value="Sano">Sano</option>
+                            <option value="En tratamiento">En tratamiento</option>
+                            <option value="En observación">En observación</option>
+                            <option value="Crónico">Crónico</option>
+                            <option value="Grave">Grave</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="formGroupExampleInput8" class="form-label">Observaciones:</label>
+                    <textarea class="form-control" id="formGroupExampleInput8"
+                        placeholder="Ingresa alguna observación del animal" name="observations"
+                        [(ngModel)]="observations"></textarea>
+                </div>
+                <div class="d-flex flex-column gap-2 justify-content-center align-items-center">
+                    <input type="submit" class="w-50 btn bg-color-1 rounded-5 fw-bold" value="Nuevo animal"
+                        (click)="postAnimal(formulario)">
+                    <input type="submit" class="w-50 btn bg-color-5 rounded-5 fw-bold" value="Guardar cambios"
+                        (click)="putAnimal(formulario)">
+                    <input type="submit" class="w-50 btn rounded-5 fw-bold" value="Eliminar animal"
+                        (click)="deleteAnimal(formulario)">
+                    <button class="btn rounded-5 d-sm-none" (click)="activateTabItem('nav-list-tab', null)">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Volver al listado de productos
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

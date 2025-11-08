@@ -8,6 +8,7 @@ import { authGuardGuardIn, authGuardGuardOut } from './services/auth.guard-guard
 import { ProfileComponent } from './private/profile-component/profile-component';
 import { UsersComponent } from './private/users-component/users-component';
 import { NewsComponent } from './private/news-component/news-component';
+import { AnimalsComponent } from './private/animals-component/animals-component';
 
 export const routes: Routes = [
     { path: "", component: LoginComponent, canActivate: [authGuardGuardIn] },
@@ -20,4 +21,5 @@ export const routes: Routes = [
     { path: "inventory", component: InventoryComponent, canActivate: [authGuardGuardOut] },
     { path: "news", component: NewsComponent, canActivate: [authGuardGuardOut] },
     { path: "tasks", component: TasksComponent, canActivate: [authGuardGuardOut] },
+    { path: "animals", component: AnimalsComponent, canActivate: [authGuardGuardOut] },
 ];

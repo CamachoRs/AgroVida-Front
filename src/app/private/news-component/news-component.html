@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="col-md-4 text-center">
-                <img src="http://192.168.101.11:8000/storage/{{item.image}}" class="img-fluid py-2 rounded-5" alt="..."
+                <img src="http://192.168.101.11:8000/{{item.image}}" class="img-fluid py-2 rounded-5" alt="..."
                     style="max-height: 200px; object-fit: cover;">
             </div>
         </div>
@@ -61,7 +61,7 @@
                     <p class="color-1 my-2 fs-6 fw-light">
                         De: {{newsNameUser}} | Publicado el {{newsUpdate | date:'dd-MM-yyyy'}}
                     </p>
-                    <img [src]="'http://192.168.101.11:8000/storage/'+newsImage" class="img-fluid rounded-5" alt="...">
+                    <img [src]="'http://192.168.101.11:8000/'+newsImage" class="img-fluid rounded-5" alt="...">
                 </div>
                 <div class="border-top px-4 pt-2">
                     <p class="fs-5 fw-bold">Animales relacionados</p>
