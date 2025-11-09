@@ -21,15 +21,156 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-tasks-tab"
             tabindex="0">
-            <app-item-component (changeTab)="activateTab($event)" />
+            @for(item of tasksItems; track item.id){
+            <div class="card my-3 border-0 shadow-sm">
+                <div class="row card-body align-items-center justify-content-between">
+                    <div class="col col-12 col-md-7">
+                        <h5 class="card-title mb-2">{{item.name}} - {{item.id}}</h5>
+                        <p class="card-text color-1 my-0">
+                            Animales: {{item.animalnameslist}}, Urgencia:
+                            <span
+                                [ngClass]="{'text-danger': item.urgency === 'Alta', 'text-warning': item.urgency === 'Media', 'text-succes': item.urgency === 'Baja'}">
+                                {{item.urgency}}
+                            </span>,
+                            Fecha límite: {{item.deadline}}
+                        </p>
+                        <p class="card-text color-1 mt-0 mb-3">
+                            {{item.description}}
+                        </p>
+                    </div>
+                    <div class="col col-12 col-md-5 text-center text-md-end">
+                        <button class="btn bg-color-1 rounded-4 m-1">
+                            Actualizar tarea
+                        </button>
+                        <button class="btn bg-color-5 rounded-4 m-1">
+                            Gestionar tarea
+                        </button>
+                    </div>
+                </div>
+            </div>
+            }
             <button class="btn bg-color-5 rounded-5 w-100">
                 <i class="fa-solid fa-file-arrow-down"></i>
                 Exportar registro de tareas en la finca
             </button>
         </div>
-        <div class="tab-pane fade" id="nav-complete" role="tabpanel" aria-labelledby="nav-complete-tab" tabindex="0">...
+        <div class="tab-pane fade" id="nav-complete" role="tabpanel" aria-labelledby="nav-complete-tab" tabindex="0">
+            <form #formulario="ngForm" class="row">
+                <div class="col col-12 col-md-6">
+                    <h3 class="fw-bold">Información de la tarea</h3>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput1" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput1" name="name"
+                            [(ngModel)]="name" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput2" class="form-label">Fecha límite:</label>
+                        <input type="date" class="form-control" id="formGroupExampleInput2" name="deadline"
+                            [(ngModel)]="deadline" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput3" class="form-label">Urgencia:</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput3" name="urgency"
+                            [(ngModel)]="urgency" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput4" class="form-label">Descripción:</label>
+                        <textarea class="form-control" id="formGroupExampleInput4" name="description"
+                            [(ngModel)]="description" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput5" class="form-label">Animales relacionados:</label>
+                        <textarea class="form-control" id="formGroupExampleInput5" name="animalnameslist"
+                            [(ngModel)]="animalnameslist" readonly></textarea>
+                    </div>
+                </div>
+                <div class="col col-12 col-md-6">
+                    <h3 class="fw-bold">Gestionar tarea</h3>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput6" class="form-label">Comentarios:</label>
+                        <textarea class="form-control" id="formGroupExampleInput6" name="descriptionR"
+                            [(ngModel)]="descriptionR" readonly></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFile" class="form-label">Subir evidencia (imágenes):</label>
+                        <input class="form-control" type="file" id="formFile" accept="image/">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput7" class="form-label">Reasignar tarea:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput7" name="userId" [(ngModel)]="userId">
+                            <option value="-1" selected disabled>Selecciona el usuario</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 d-flex flex-column justify-content-center align-items-center gap-2">
+                        <input type="submit" class="btn bg-color-1 rounded-5 fw-bold w-100" value="Completar tarea">
+                        <input type="submit" class="btn bg-color-5 rounded-5 fw-bold w-100" value="Reasignar tarea">
+                        <input type="submit" class="btn rounded-5 fw-bold w-100" value="Cancelar">
+                    </div>
+                </div>
+            </form>
         </div>
-        <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">...
+        <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">
+            <form #formulario1="ngForm" class="row">
+                <div class="col col-12 col-md-6">
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput8" class="form-label">Nombre:</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput8"
+                            placeholder="Ingrese el nombre de la tarea" name="name" [(ngModel)]="name" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput9" class="form-label">Fecha límite:</label>
+                        <input type="date" class="form-control" id="formGroupExampleInput9"
+                            placeholder="Ingrese o seleccione la fecha" name="deadline" [(ngModel)]="deadline" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput10" class="form-label">Elemento a usar:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput10" name="inventoryId" [(ngModel)]="inventoryId">
+                            <option value="-1" selected disabled>Selecciona el elemento</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput11" class="form-label">Cantidad:</label>
+                        <input type="text" class="form-control" id="formGroupExampleInput11"
+                            placeholder="Ingrese la cantidad que se debe usar" name="itemQuantity"
+                            [(ngModel)]="itemQuantity" />
+                    </div>
+                </div>
+                <div class="col col-12 col-md-6">
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput12" class="form-label">Asignar:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput12" name="userId" [(ngModel)]="userId">
+                            <option value="-1" selected disabled>Selecciona el usuario</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput13" class="form-label">Urgencia:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput13" name="urgency" [(ngModel)]="urgency">
+                            <option value="" selected disabled>Selecciona el nivel de urgencia</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formGroupExampleInput14" class="form-label">Animales relacionado:</label>
+                        <select class="form-select color-1" aria-label="Default select example"
+                            id="formGroupExampleInput14" name="revisarVariable" [(ngModel)]="revisarVariable">
+                            <option value="" selected disabled>Selecciona el/los animales</option>
+                            <option value="Macho">Macho</option>
+                            <option value="Hembra">Hembra</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

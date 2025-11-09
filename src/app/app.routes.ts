@@ -20,6 +20,6 @@ export const routes: Routes = [
     { path: "users", component: UsersComponent, canActivate: [authGuardGuardOut] },
     { path: "inventory", component: InventoryComponent, canActivate: [authGuardGuardOut] },
     { path: "news", component: NewsComponent, canActivate: [authGuardGuardOut] },
-    { path: "tasks", component: TasksComponent, canActivate: [authGuardGuardOut] },
     { path: "animals", component: AnimalsComponent, canActivate: [authGuardGuardOut] },
+    { path: "tasks", component: TasksComponent, canActivate: [authGuardGuardOut] },
 ];
