@@ -5,7 +5,8 @@
     <nav class="d-none d-md-flex my-3">
         <div class="nav nav-underline" id="nav-tab" role="tablist">
             <button class="nav-link active color-1" id="nav-list-tab" data-bs-toggle="tab" data-bs-target="#nav-list"
-                type="button" role="tab" aria-controls="nav-list" aria-selected="true">
+                type="button" role="tab" aria-controls="nav-list" aria-selected="true"
+                (click)="activateTabItem('nav-list-tab', null)">
                 Mis tareas
             </button>
             <button class="nav-link color-1" id="nav-complete-tab" data-bs-toggle="tab" data-bs-target="#nav-complete"
@@ -21,6 +22,11 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-tasks-tab"
             tabindex="0">
+            <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100"
+                (click)="activateTabItem('nav-manage-tab', null)">
+                <i class="fa-solid fa-plus"></i>
+                Agregar una tarea
+            </button>
             @for(item of tasksItems; track item.id){
             <div class="card my-3 border-0 shadow-sm">
                 <div class="row card-body align-items-center justify-content-between">
@@ -39,17 +45,18 @@
                         </p>
                     </div>
                     <div class="col col-12 col-md-5 text-center text-md-end">
-                        <button class="btn bg-color-1 rounded-4 m-1">
+                        <button class="btn bg-color-1 rounded-4 m-1"
+                            (click)="activateTabItem('nav-complete-tab', item)">
                             Actualizar tarea
                         </button>
-                        <button class="btn bg-color-5 rounded-4 m-1">
+                        <button class="btn bg-color-5 rounded-4 m-1" (click)="activateTabItem('nav-manage-tab', item)">
                             Gestionar tarea
                         </button>
                     </div>
                 </div>
             </div>
             }
-            <button class="btn bg-color-5 rounded-5 w-100">
+            <button class="btn bg-color-5 rounded-5 w-100" (click)="exportTasks()">
                 <i class="fa-solid fa-file-arrow-down"></i>
                 Exportar registro de tareas en la finca
             </button>
@@ -89,25 +96,30 @@
                     <div class="mb-3">
                         <label for="formGroupExampleInput6" class="form-label">Comentarios:</label>
                         <textarea class="form-control" id="formGroupExampleInput6" name="descriptionR"
-                            [(ngModel)]="descriptionR" readonly></textarea>
+                            [(ngModel)]="descriptionR"></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Subir evidencia (imágenes):</label>
-                        <input class="form-control" type="file" id="formFile" accept="image/">
+                        <input class="form-control" type="file" id="formFile"
+                            accept="image/jpeg, image/png, image/gif, image/webp" (change)="onImageSelected($event)">
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput7" class="form-label">Reasignar tarea:</label>
                         <select class="form-select color-1" aria-label="Default select example"
                             id="formGroupExampleInput7" name="userId" [(ngModel)]="userId">
                             <option value="-1" selected disabled>Selecciona el usuario</option>
-                            <option value="Macho">Macho</option>
-                            <option value="Hembra">Hembra</option>
+                            @for(item of userItems; track item.id){
+                            <option value="{{item.id}}">{{item.nameUser}}</option>
+                            }
                         </select>
                     </div>
                     <div class="mb-3 d-flex flex-column justify-content-center align-items-center gap-2">
-                        <input type="submit" class="btn bg-color-1 rounded-5 fw-bold w-100" value="Completar tarea">
-                        <input type="submit" class="btn bg-color-5 rounded-5 fw-bold w-100" value="Reasignar tarea">
-                        <input type="submit" class="btn rounded-5 fw-bold w-100" value="Cancelar">
+                        <input type="submit" class="btn bg-color-1 rounded-5 fw-bold w-100" value="Completar tarea"
+                            (click)="resolveTask(formulario)">
+                        <input type="submit" class="btn bg-color-5 rounded-5 fw-bold w-100" value="Reasignar tarea"
+                            (click)="reassignTask(formulario)">
+                        <input type="submit" class="btn rounded-5 fw-bold w-100" value="Cancelar"
+                            (click)="activateTabItem('nav-list-tab', null)">
                     </div>
                 </div>
             </form>
@@ -123,15 +135,17 @@
                     <div class="mb-3">
                         <label for="formGroupExampleInput9" class="form-label">Fecha límite:</label>
                         <input type="date" class="form-control" id="formGroupExampleInput9"
-                            placeholder="Ingrese o seleccione la fecha" name="deadline" [(ngModel)]="deadline" />
+                            placeholder="Ingrese o seleccione la fecha" name="deadline" [(ngModel)]="deadline"
+                            [attr.min]="currentDate" />
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput10" class="form-label">Elemento a usar:</label>
                         <select class="form-select color-1" aria-label="Default select example"
                             id="formGroupExampleInput10" name="inventoryId" [(ngModel)]="inventoryId">
                             <option value="-1" selected disabled>Selecciona el elemento</option>
-                            <option value="Macho">Macho</option>
-                            <option value="Hembra">Hembra</option>
+                            @for(item of inventoryItems; track item.id){
+                            <option value="{{item.id}}">{{item.nameItem}}</option>
+                            }
                         </select>
                     </div>
                     <div class="mb-3">
@@ -147,8 +161,9 @@
                         <select class="form-select color-1" aria-label="Default select example"
                             id="formGroupExampleInput12" name="userId" [(ngModel)]="userId">
                             <option value="-1" selected disabled>Selecciona el usuario</option>
-                            <option value="Macho">Macho</option>
-                            <option value="Hembra">Hembra</option>
+                            @for(item of userItems; track item.id){
+                            <option value="{{item.id}}">{{item.nameUser}}</option>
+                            }
                         </select>
                     </div>
                     <div class="mb-3">
@@ -156,19 +171,45 @@
                         <select class="form-select color-1" aria-label="Default select example"
                             id="formGroupExampleInput13" name="urgency" [(ngModel)]="urgency">
                             <option value="" selected disabled>Selecciona el nivel de urgencia</option>
-                            <option value="Macho">Macho</option>
-                            <option value="Hembra">Hembra</option>
+                            <option value="Alta">Alta</option>
+                            <option value="Media">Media</option>
+                            <option value="Baja">Baja</option>
                         </select>
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput14" class="form-label">Animales relacionado:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput14" name="revisarVariable" [(ngModel)]="revisarVariable">
-                            <option value="" selected disabled>Selecciona el/los animales</option>
-                            <option value="Macho">Macho</option>
-                            <option value="Hembra">Hembra</option>
+                            id="formGroupExampleInput14" name="animalId" [(ngModel)]="animalId" (change)="addAnimal()">
+                            <option [ngValue]="-1" selected disabled>Selecciona el/los animales</option>
+                            @for(item of animalItems; track item.id){
+                            <option [ngValue]="item.id">{{item.name}}</option>
+                            }
                         </select>
+                        @if(animalsId.length>0){
+                        @for(item of animalsId; track item){
+                        @for(item2 of animalItems; track item2.id){
+                        @if(item == item2.id){
+                        <button class="btn bg-color-5 rounded-5 m-2" (click)="removeAnimal(item)">
+                            {{item2.name}}
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                        }
+                        }
+                        }
+                        }
                     </div>
+                </div>
+                <div class="d-flex flex-column flex-sm-row gap-2">
+                    <input type="button" class="btn bg-color-1 rounded-5 w-100 fw-bold" value="Nueva tarea"
+                        (click)="postTask(formulario1)">
+                    <input type="button" class="btn bg-color-5 rounded-5 w-100 fw-bold" value="Guardar cambios"
+                        (click)="putTask(formulario1)">
+                    <input type="button" class="btn rounded-5 w-100 fw-bold" value="Eliminar tarea"
+                        (click)="deleteTask(formulario1)">
+                    <button class="btn rounded-5 d-sm-none" (click)="activateTabItem('nav-list-tab', null)">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Volver al listado de tareas
+                    </button>
                 </div>
             </form>
         </div>

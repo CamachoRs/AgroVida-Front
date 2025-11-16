@@ -3,7 +3,6 @@ import { NavComponent } from "../nav-component/nav-component";
 import { AnimalService } from '../../services/animal.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormsModule, NgForm } from '@angular/forms';
-import { NotExpr } from '@angular/compiler';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -177,6 +176,7 @@ export class AnimalsComponent {
           form.resetForm();
           this.resetInputs();
           this.getAnimals();
+          this.activateTabItem('nav-list-tab', null, null, null)
         },
         error: (responseError) => {
           if (responseError && responseError.error && responseError.error.errors) {
