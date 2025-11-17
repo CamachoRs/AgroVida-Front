@@ -18,12 +18,14 @@
             <a class="nav-link" [class.nav-link-active]="activeLink==='news'" routerLink="/news">
                 Novedades
             </a>
+            @if(role !== "empleado"){
             <a class="nav-link" [class.nav-link-active]="activeLink==='inventory'" routerLink="/inventory">
                 Inventario
             </a>
             <a class="nav-link" [class.nav-link-active]="activeLink==='users'" routerLink="/users">
                 Empleados
             </a>
+            }
             <a class="nav-link" [class.nav-link-active]="activeLink==='profile'" routerLink="/profile">
                 Perfil
             </a>

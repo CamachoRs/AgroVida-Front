@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 export class NavComponent {
   @Input()
   activeLink: string = "logout";
+  role = sessionStorage.getItem("role");
 
   constructor(private privateService: PrivateService, private toastr: ToastrService, private router: Router) { };
 

@@ -39,7 +39,7 @@
         <div class="mb-3 col-12 col-md-5">
             <label for="formGroupExampleInput5" class="form-label">Municipio:</label>
             <select class="form-select color-1" aria-label="Default select example" id="formGroupExampleInput5"
-                name="municipality" [(ngModel)]="profileMunicipality">
+                name="municipality" [(ngModel)]="profileMunicipality" [disabled]="role">
                 <option value="" selected disabled>Selecciona el municio de tu finca</option>
                 @for (municipality of municipalities; track municipality) {
                 <option value="{{municipality}}">{{municipality}}</option>
@@ -49,12 +49,14 @@
         <div class="mb-3 col-12 col-md-5">
             <label for="formGroupExampleInput6" class="form-label">Nombre de la vereda:</label>
             <input type="text" class="form-control" id="formGroupExampleInput6"
-                placeholder="Ingresa el nombre de la vereda" name="sidewalk" [(ngModel)]="profileSidewalk">
+                placeholder="Ingresa el nombre de la vereda" name="sidewalk" [(ngModel)]="profileSidewalk"
+                [readOnly]="role">
         </div>
         <div class="mb-3 col-12 col-md-5">
             <label for="formGroupExampleInput7" class="form-label">Nombre de la finca:</label>
             <input type="text" class="form-control" id="formGroupExampleInput7"
-                placeholder="Ingresa el nombre de tu finca" name="nameEstate" [(ngModel)]="profileNameEstate">
+                placeholder="Ingresa el nombre de tu finca" name="nameEstate" [(ngModel)]="profileNameEstate"
+                [readOnly]="role">
         </div>
         <div class="col-12 col-md-5 d-flex justify-content-end align-items-center mb-2">
             <input type="submit" value="Editar" class="btn bg-color-1 rounded-4 fw-bold w-100">

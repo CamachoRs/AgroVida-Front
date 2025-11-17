@@ -22,15 +22,17 @@
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-list-tab"
             tabindex="0">
+            @if(!role){
             <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100"
                 (click)="activateTabItem('nav-manage-tab', null, null, null)">
                 <i class="fa-solid fa-plus"></i>
                 Agregar un animal
             </button>
+            }
             <div class="row">
                 @for(item of animalsItems; track item.id){
                 <div class="card border-0 col-12 col-sm-6 col-md-4 col-lg-3 my-2">
-                    <img src="http://192.168.101.11:8000/{{item.image}}" class="card-img-top rounded-5" alt="...">
+                    <img src="http://192.168.101.5:8000/{{item.image}}" class="card-img-top rounded-5" alt="...">
                     <div class="card-body">
                         <h5 class="card-title">{{item.name}}</h5>
                         <p class="card-text">{{item.categoryName}} - {{item.sex}}</p>
@@ -46,37 +48,39 @@
         <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">
             <form #formulario="ngForm" class="row">
                 @if(image){
-                <img src="http://192.168.101.11:8000/{{image}}" class="img-fluid rounded-5 col-7 mx-auto my-3"
-                    alt="...">
+                <img src="http://192.168.101.5:8000/{{image}}" class="img-fluid rounded-5 col-7 mx-auto my-3" alt="...">
                 }
                 <div class="col col-12 col-md-6">
                     <div class="mb-3">
                         <label for="formGroupExampleInput1" class="form-label">Nombre:</label>
                         <input type="text" class="form-control" id="formGroupExampleInput1"
                             placeholder="Ingresa el nombre del producto que desea consultar" name="name"
-                            [(ngModel)]="name" />
+                            [(ngModel)]="name" [readOnly]="role" />
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput2" class="form-label">Peso actual (kilogramos):</label>
                         <input type="number" class="form-control" id="formGroupExampleInput2"
-                            placeholder="Ingrese el peso actual del animal" name="weight" [(ngModel)]="weight" />
+                            placeholder="Ingrese el peso actual del animal" name="weight" [(ngModel)]="weight"
+                            [readOnly]="role" />
                     </div>
                     <div class="mb-3">
                         <label for="formGroupExampleInput3" class="form-label">Fecha de ingreso:</label>
                         <input type="date" class="form-control" id="formGroupExampleInput3" name="createdAt"
                             [(ngModel)]="createdAt" readonly />
                     </div>
+                    @if(!role){
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Adjuntar foto del animal:</label>
                         <input class="form-control" type="file" id="formFile"
-                            (change)="onImageSelected($event, 'image')" accept="image/">
+                            (change)="onImageSelected($event, 'image')" accept="image/" />
                     </div>
+                    }
                 </div>
                 <div class="col col-12 col-md-6">
                     <div class="mb-3">
                         <label for="formGroupExampleInput4" class="form-label">Especie:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput4" name="categoryId" [(ngModel)]="categoryId">
+                            id="formGroupExampleInput4" name="categoryId" [(ngModel)]="categoryId" [disabled]="role">
                             <option value="-1" selected disabled>Selecciona la especie del animal</option>
                             @for (item of animalCategories; track item.id) {
                             <option value="{{item.id}}">{{item.name}}</option>
@@ -86,7 +90,7 @@
                     <div class="mb-3">
                         <label for="formGroupExampleInput5" class="form-label">Sexo:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput5" name="sex" [(ngModel)]="sex">
+                            id="formGroupExampleInput5" name="sex" [(ngModel)]="sex" [disabled]="role">
                             <option value="" selected disabled>Selecciona el sexo del animal</option>
                             <option value="Macho">Macho</option>
                             <option value="Hembra">Hembra</option>
@@ -95,7 +99,7 @@
                     <div class="mb-3">
                         <label for="formGroupExampleInput6" class="form-label">Rango de edad:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput6" name="ageRange" [(ngModel)]="ageRange">
+                            id="formGroupExampleInput6" name="ageRange" [(ngModel)]="ageRange" [disabled]="role">
                             <option value="" selected disabled>Selecciona el rango de edada del animal</option>
                             <option value="Cría">Cría</option>
                             <option value="Juvenil">Juvenil</option>
@@ -108,7 +112,8 @@
                     <div class="mb-3">
                         <label for="formGroupExampleInput7" class="form-label">Estado de salud:</label>
                         <select class="form-select color-1" aria-label="Default select example"
-                            id="formGroupExampleInput7" name="healthStatus" [(ngModel)]="healthStatus">
+                            id="formGroupExampleInput7" name="healthStatus" [(ngModel)]="healthStatus"
+                            [disabled]="role">
                             <option value="" selected disabled>Selecciona el estado de salud del animal</option>
                             <option value="Sano">Sano</option>
                             <option value="En tratamiento">En tratamiento</option>
@@ -122,15 +127,17 @@
                     <label for="formGroupExampleInput8" class="form-label">Observaciones:</label>
                     <textarea class="form-control" id="formGroupExampleInput8"
                         placeholder="Ingresa alguna observación del animal" name="observations"
-                        [(ngModel)]="observations"></textarea>
+                        [(ngModel)]="observations" [readOnly]="role"></textarea>
                 </div>
                 <div class="d-flex flex-column gap-2 justify-content-center align-items-center">
+                    @if(!role){
                     <input type="submit" class="w-50 btn bg-color-1 rounded-5 fw-bold" value="Nuevo animal"
                         (click)="postAnimal(formulario)">
                     <input type="submit" class="w-50 btn bg-color-5 rounded-5 fw-bold" value="Guardar cambios"
                         (click)="putAnimal(formulario)">
                     <input type="submit" class="w-50 btn rounded-5 fw-bold" value="Eliminar animal"
                         (click)="deleteAnimal(formulario)">
+                    }
                     <button class="btn rounded-5 d-sm-none" (click)="activateTabItem('nav-list-tab', null, null, null)">
                         <i class="fa-solid fa-arrow-left"></i>
                         Ir listado de animales
@@ -146,11 +153,13 @@
         <div class="tab-pane fade" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab" tabindex="0">
             @if(animalId>0){
             <div class="d-flex flex-column flex-sm-row justify-content-center align-items-center">
+                @if(!role){
                 <button class="btn bg-color-1 fw-bold rounded-5 my-2 mx-auto" data-bs-toggle="modal"
                     data-bs-target="#exampleModal1" (click)=" activeModal('Agregar revisión')">
                     <i class="fa-solid fa-plus"></i>
                     Agregar revisión
                 </button>
+                }
                 <button class="btn rounded-5 my-2 mx-auto d-sm-none"
                     (click)="activateTabItem('nav-list-tab', null, null, null)">
                     <i class="fa-solid fa-arrow-left"></i>
@@ -209,7 +218,8 @@
                         <div class="mb-3">
                             <label for="formGroupExampleInput9" class="form-label">Tipo de revisión:</label>
                             <select class="form-select color-1" aria-label="Default select example"
-                                id="formGroupExampleInput9" name="reviewType" [(ngModel)]="reviewType">
+                                id="formGroupExampleInput9" name="reviewType" [(ngModel)]="reviewType"
+                                [disabled]="role">
                                 <option value="" selected disabled>Selecciona el tipo de revisión</option>
                                 <option value="Chequeo general">Chequeo general</option>
                                 <option value="Tratamiento">Tratamiento</option>
@@ -222,7 +232,7 @@
                             <label for="formGroupExampleInput10" class="form-label">Observaciones:</label>
                             <textarea class="form-control" id="formGroupExampleInput10"
                                 placeholder="Ingresa alguna observación del animal" name="observationsMedical"
-                                [(ngModel)]="observationsMedical"></textarea>
+                                [(ngModel)]="observationsMedical" [readOnly]="role"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="formGroupExampleInput11" class="form-label">
@@ -230,12 +240,14 @@
                             </label>
                             <input type="text" class="form-control" id="formGroupExampleInput11"
                                 placeholder="Ingresa el nombre de la persona que realizó la revisión"
-                                name="reviewerName" [(ngModel)]="reviewerName" />
+                                name="reviewerName" [(ngModel)]="reviewerName" [readOnly]="role" />
                         </div>
                         <div class="mb-3">
+                            @if(!role){
                             <label for="formFile1" class="form-label">Adjuntar archivos:</label>
                             <input class="form-control" type="file" id="formFile1"
-                                (change)="onImageSelected($event, 'file')">
+                                (change)="onImageSelected($event, 'file')" />
+                            }
                             @if(file){
                             <button class="btn rounded-5 mt-2" (click)="downloadMedicalFile(medicalId)">
                                 Descargar archivo
@@ -249,7 +261,7 @@
                             </label>
                             <input type="text" class="form-control" id="formGroupExampleInput12"
                                 placeholder="Ingresa el nombre del medicamento que usaron" name="medicationName"
-                                [(ngModel)]="medicationName" />
+                                [(ngModel)]="medicationName" [readOnly]="role" />
                         </div>
                         <div class="mb-3">
                             <label for="formGroupExampleInput13" class="form-label">
@@ -257,13 +269,13 @@
                             </label>
                             <input type="text" class="form-control" id="formGroupExampleInput13"
                                 placeholder="Ingresa la cantidad de la dosis que se suministro" name="dose"
-                                [(ngModel)]="dose" />
+                                [(ngModel)]="dose" [readOnly]="role" />
                         </div>
                         <div class="mb-3">
                             <label for="formGroupExampleInput14" class="form-label">Vía de administración:</label>
                             <select class="form-select color-1" aria-label="Default select example"
                                 id="formGroupExampleInput14" name="administrationRoute"
-                                [(ngModel)]="administrationRoute">
+                                [(ngModel)]="administrationRoute" [disabled]="role">
                                 <option value="undefined" selected disabled>Selecciona el tipo de revisión</option>
                                 <option value="Oral">Oral</option>
                                 <option value="Inyectable">Inyectable</option>
@@ -272,6 +284,7 @@
                             </select>
                         </div>
                     </div>
+                    @if(!role){
                     <div class="modal-footer">
                         @if(titleModal == "Agregar revisión"){
                         <input type="submit" value="Agregar" class="btn rounded-5 bg-color-1 fw-bold"
@@ -283,6 +296,7 @@
                         <input type="submit" value="Cancelar" class="btn rounded-5 bg-color-5 fw-bold"
                             data-bs-dismiss="modal">
                     </div>
+                    }
                 </form>
             </div>
         </div>

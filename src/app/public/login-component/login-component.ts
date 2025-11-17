@@ -52,6 +52,7 @@ export class LoginComponent implements OnInit {
           this.loginPassword = "";
           sessionStorage.setItem("access_token", responseCorrect.access_token);
           sessionStorage.setItem("expires_in", responseCorrect.expires_in);
+          sessionStorage.setItem("role", responseCorrect.role);
           this.router.navigate(["/tasks"]);
         },
         error: (responseError) => {

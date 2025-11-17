@@ -14,6 +14,7 @@ import { CommonModule } from '@angular/common';
 export class AnimalsComponent {
   activeLink = "animals";
   titleModal = "Detalle de la revisión";
+  role = sessionStorage.getItem("role") === "empleado";
   animalsItems: any[] = [];
   animalCategories: any[] = []
   medicalInformation: any[] = []
@@ -267,7 +268,6 @@ export class AnimalsComponent {
   putMedical(form: NgForm) {
     const regexName = /^[A-Za-z\s]{3,50}$/;
     let validation = true;
-    console.log(this.animalId);
 
     if (!regexName.test(this.reviewerName.trim())) {
       this.toastr.error("El nombre de la persona debe contener solo letras y espacios, y tener al menos 3 caracteres.");

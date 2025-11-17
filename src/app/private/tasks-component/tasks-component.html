@@ -13,20 +13,24 @@
                 type="button" role="tab" aria-controls="nav-complete" aria-selected="false">
                 Completar tarea
             </button>
+            @if(role !== "empleado"){
             <button class="nav-link color-1" id="nav-manage-tab" data-bs-toggle="tab" data-bs-target="#nav-manage"
                 type="button" role="tab" aria-controls="nav-manage" aria-selected="false">
                 Gestionar tareas
             </button>
+            }
         </div>
     </nav>
     <div class="tab-content" id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-list" role="tabpanel" aria-labelledby="nav-tasks-tab"
             tabindex="0">
+            @if(role !== "empleado"){
             <button class="btn bg-color-1 rounded-5 d-sm-none fw-bold w-100"
                 (click)="activateTabItem('nav-manage-tab', null)">
                 <i class="fa-solid fa-plus"></i>
                 Agregar una tarea
             </button>
+            }
             @for(item of tasksItems; track item.id){
             <div class="card my-3 border-0 shadow-sm">
                 <div class="row card-body align-items-center justify-content-between">
@@ -49,17 +53,21 @@
                             (click)="activateTabItem('nav-complete-tab', item)">
                             Actualizar tarea
                         </button>
+                        @if(role !== "empleado"){
                         <button class="btn bg-color-5 rounded-4 m-1" (click)="activateTabItem('nav-manage-tab', item)">
                             Gestionar tarea
                         </button>
+                        }
                     </div>
                 </div>
             </div>
             }
+            @if(role !== "empleado"){
             <button class="btn bg-color-5 rounded-5 w-100" (click)="exportTasks()">
                 <i class="fa-solid fa-file-arrow-down"></i>
                 Exportar registro de tareas en la finca
             </button>
+            }
         </div>
         <div class="tab-pane fade" id="nav-complete" role="tabpanel" aria-labelledby="nav-complete-tab" tabindex="0">
             <form #formulario="ngForm" class="row">
@@ -124,6 +132,7 @@
                 </div>
             </form>
         </div>
+        @if(role !== "empleado"){
         <div class="tab-pane fade" id="nav-manage" role="tabpanel" aria-labelledby="nav-manage-tab" tabindex="0">
             <form #formulario1="ngForm" class="row">
                 <div class="col col-12 col-md-6">
@@ -213,5 +222,6 @@
                 </div>
             </form>
         </div>
+        }
     </div>
 </div>

@@ -12,6 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProfileComponent implements OnInit {
   activeLink = "profile";
+  role = sessionStorage.getItem("role") === "empleado";
   profileNameUser: string = "";
   profileEmail: string = "";
   profilePassword: string = "";

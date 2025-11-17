@@ -13,6 +13,7 @@ import { FormsModule, NgForm } from '@angular/forms';
 })
 export class TasksComponent {
   activeLink = "tasks";
+  role = sessionStorage.getItem("role");
   currentDate: string = "";
   tasksItems: any[] = [];
   inventoryItems: any[] = [];
@@ -295,14 +296,16 @@ export class TasksComponent {
   };
 
   getInventory() {
-    this.taskService.getInventory().subscribe({
-      next: (responseCorrect) => {
-        this.inventoryItems = responseCorrect.data;
-      },
-      error: (responseError) => {
-        this.toastr.error(responseError.error.message);
-      }
-    });
+    if (this.role !== "empleado") {
+      this.taskService.getInventory().subscribe({
+        next: (responseCorrect) => {
+          this.inventoryItems = responseCorrect.data;
+        },
+        error: (responseError) => {
+          this.toastr.error(responseError.error.message);
+        }
+      });
+    }
   };
 
   getUsers() {
@@ -338,7 +341,9 @@ export class TasksComponent {
         link.click();
         window.URL.revokeObjectURL(url);
       },
-      error: (responseError) => { console.log(responseError); }
+      error: (responseError) => {
+        this.toastr.error(responseError.error.message)
+      }
     });
   };
 }
