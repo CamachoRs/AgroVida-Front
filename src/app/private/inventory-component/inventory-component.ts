@@ -208,7 +208,7 @@ export class InventoryComponent implements OnInit {
         };
       },
       error: (responseError) => {
-        this.toastr.error(responseError.error.message)
+        this.toastr.error(responseError.error.message);
       }
     });
   };

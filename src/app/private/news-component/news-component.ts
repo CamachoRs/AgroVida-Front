@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 })
 export class NewsComponent implements OnInit {
   activeLink = "news";
+  role = sessionStorage.getItem("role");
   titleModal: string | null = null;
   newsId: number = -1;
   newsTitle: string = "";

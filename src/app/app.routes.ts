@@ -10,6 +10,7 @@ import { UsersComponent } from './private/users-component/users-component';
 import { NewsComponent } from './private/news-component/news-component';
 import { AnimalsComponent } from './private/animals-component/animals-component';
 import { NotFoundComponent } from './public/not-found-component/not-found-component';
+import { CategoriesComponent } from './private/categories-component/categories-component';
 
 export const routes: Routes = [
     { path: "", component: LoginComponent, canActivate: [authGuardGuardIn] },
@@ -20,6 +21,7 @@ export const routes: Routes = [
 
     { path: "profile", component: ProfileComponent, canActivate: [authGuardGuardOut, authGuardRole] },
     { path: "users", component: UsersComponent, canActivate: [authGuardGuardOut, authGuardRole] },
+    { path: "categories", component: CategoriesComponent, canActivate: [authGuardGuardOut, authGuardRole] },
     { path: "inventory", component: InventoryComponent, canActivate: [authGuardGuardOut, authGuardRole] },
     { path: "news", component: NewsComponent, canActivate: [authGuardGuardOut, authGuardRole] },
     { path: "animals", component: AnimalsComponent, canActivate: [authGuardGuardOut, authGuardRole] },

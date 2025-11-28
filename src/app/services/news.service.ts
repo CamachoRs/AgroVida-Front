@@ -6,7 +6,7 @@ import { throwIfEmpty } from 'rxjs';
   providedIn: 'root'
 })
 export class NewsService {
-  private urlBase = "http://192.168.101.5:8000/api"
+  private urlBase = "http://192.168.101.9:8000/api"
 
   constructor(private http: HttpClient) { };
 

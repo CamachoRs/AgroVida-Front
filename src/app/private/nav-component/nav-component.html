@@ -22,6 +22,11 @@
             <a class="nav-link" [class.nav-link-active]="activeLink==='inventory'" routerLink="/inventory">
                 Inventario
             </a>
+            @if(role == "administrador"){
+            <a class="nav-link" [class.nav-link-active]="activeLink==='category'" routerLink="/categories">
+                Categorias
+            </a>
+            }
             <a class="nav-link" [class.nav-link-active]="activeLink==='users'" routerLink="/users">
                 Empleados
             </a>

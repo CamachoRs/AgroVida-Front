@@ -20,7 +20,7 @@
                             (click)="activateTabItem('exampleModal1', item, null)">
                             Ver más
                         </button>
-                        @if(item.nameUser !== "AgroVida"){
+                        @if(item.nameUser !== "AgroVida" || role === "administrador"){
                         <button class="btn bg-color-5 rounded-5" data-bs-toggle="modal" data-bs-target="#exampleModal2"
                             (click)="activateTabItem('exampleModal2', item, 'Actualizar')">
                             Editar
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="col-md-4 text-center">
-                <img src="http://192.168.101.5:8000/{{item.image}}" class="img-fluid py-2 rounded-5" alt="..."
+                <img src="http://192.168.101.9:8000/{{item.image}}" class="img-fluid py-2 rounded-5" alt="..."
                     style="max-height: 200px; object-fit: cover;">
             </div>
         </div>
@@ -65,7 +65,7 @@
                     <p class="color-1 my-2 fs-6 fw-light">
                         De: {{newsNameUser}} | Publicado el {{newsUpdate | date:'dd-MM-yyyy'}}
                     </p>
-                    <img [src]="'http://192.168.101.5:8000/'+newsImage" class="img-fluid rounded-5" alt="...">
+                    <img [src]="'http://192.168.101.9:8000/'+newsImage" class="img-fluid rounded-5" alt="...">
                 </div>
                 <div class="border-top px-4 pt-2">
                     <p class="fs-5 fw-bold">Animales relacionados</p>
